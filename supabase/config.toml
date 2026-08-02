@@ -1,0 +1,63 @@
+project_id = "projet-marche-togo"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+# Plafond volontairement bas : le CDC impose un ecran de resultats sous 150 Ko
+# (section 8, contrainte de cout de la donnee mobile au Togo).
+max_rows = 100
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = false
+
+[studio]
+enabled = true
+port = 54323
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+# Photos de fiche uniquement, redimensionnees a l'ingestion. Aucune video.
+file_size_limit = "5MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+# Pas de compte par e-mail : la cible marchande s'authentifie au numero de telephone.
+enable_signup = true
+
+[auth.email]
+enable_signup = false
+enable_confirmations = false
+
+[auth.sms]
+enable_signup = true
+enable_confirmations = true
+# Le canal du code a usage unique reste a arbitrer (CDC section 14, decision 3) :
+# SMS (cout par message, delivrance irreguliere au Togo) ou WhatsApp.
+# En local, les codes sont lus dans les logs ; aucun fournisseur n'est configure.
+
+[auth.sms.test_otp]
+# Numeros de test pour le developpement local, jamais en production.
+"22890000001" = "123456"
+"22890000002" = "123456"
+
+[edge_runtime]
+enabled = true
+policy = "oneshot"
+inspector_port = 8083
+
+[analytics]
+enabled = false

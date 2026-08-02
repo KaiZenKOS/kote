@@ -1,0 +1,20 @@
+{
+  "name": "projet-marche-togo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend d'une plateforme de visibilite des commercants et artisans au Togo",
+  "type": "module",
+  "scripts": {
+    "demarrer": "supabase start",
+    "arreter": "supabase stop",
+    "etat": "supabase status",
+    "reinitialiser": "supabase db reset",
+    "tester": "supabase test db",
+    "verifier": "node scripts/verifier-api.mjs",
+    "servir": "supabase functions serve --no-verify-jwt",
+    "types": "supabase gen types typescript --local > types/base.ts"
+  },
+  "devDependencies": {
+    "supabase": "^2.0.0"
+  }
+}
