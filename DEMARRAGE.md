@@ -54,8 +54,29 @@ Rejoue toutes les migrations et le jeu de données avant de lancer le reste.
 Une fois l'application installée, plus besoin de recompiler :
 
 ```bash
-npm start --prefix mobile
+npm run app
 ```
+
+**Attention : ne lancez pas un second Metro.** `npm run demarrer` en laisse déjà
+un sur le port 8081, et c'est celui-là que l'application installée interroge. Si
+vous en démarrez un autre, Expo le placera sur le port 8082 — l'application ne
+le verra jamais et continuera de parler au premier. Pour vérifier qui occupe
+8081 :
+
+```bash
+Get-NetTCPConnection -LocalPort 8081 -State Listen | Select-Object OwningProcess
+```
+
+Si un Metro tourne déjà, il n'y a rien à relancer : secouez l'appareil ou
+appuyez deux fois sur `R` pour recharger.
+
+**Le web n'est pas une cible du projet.** `react-native-web` n'est pas installé,
+et l'application dépend de code natif (MapLibre) qui n'a pas d'équivalent
+navigateur. Les scripts `web` et `ios` ont été retirés pour qu'une touche `w`
+pressée par habitude ne produise pas une erreur de résolution déroutante.
+
+De même, `npm run app` force `--dev-client` : sans ce drapeau, Expo propose
+Expo Go, qui ne sait pas charger MapLibre et afficherait un écran cassé.
 
 ---
 

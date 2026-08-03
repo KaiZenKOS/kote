@@ -10,7 +10,8 @@
     "backend:etat": "supabase status",
     "backend:reset": "supabase db reset",
     "backend:test": "supabase test db",
-    "verifier": "node scripts/verifier-api.mjs"
+    "verifier": "node scripts/verifier-api.mjs",
+    "app": "npm start --prefix mobile"
   },
   "devDependencies": {
     "supabase": "^2.111.0"
