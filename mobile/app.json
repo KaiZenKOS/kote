@@ -33,7 +33,8 @@
         }
       ],
       "expo-font",
-      "expo-splash-screen"
+      "expo-splash-screen",
+      "@maplibre/maplibre-react-native"
     ]
   }
 }

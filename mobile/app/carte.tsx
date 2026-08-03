@@ -1,129 +1,37 @@
-import { useMemo, useState } from "react";
-import {
-  Dimensions,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { useMemo, useRef, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import {
+  Camera,
+  Map as CarteLibre,
+  Marker,
+  UserLocation,
+  type CameraRef,
+} from "@maplibre/maplibre-react-native";
 import { ArrowLeft, LocateFixed } from "lucide-react-native";
 
-import { Ecran } from "../src/composants/Ecran";
+import { STYLE_SOMBRE } from "../src/carte/horsLigne";
 import { BoutonRond } from "../src/composants/communs";
-import { CarteCommerce } from "../src/composants/cartes";
+import { CarteCommerce, formaterDistance } from "../src/composants/cartes";
+import { iconeCategorie } from "../src/composants/icones";
 import { useLibellesCategories } from "../src/hooks/useLibelles";
+import { usePrechargementFiche } from "../src/hooks/useFiche";
 import { useRecherche } from "../src/hooks/useRecherche";
 import { CENTRE_LOME, usePosition } from "../src/hooks/usePosition";
 import { couleurs, espaces, police, rayons, typo } from "../src/theme/tokens";
-import type { Position, ResultatRecherche } from "../src/api/types";
 
 const RAYON_CARTE_M = 3000;
-const LARGEUR = Dimensions.get("window").width;
-
-/**
- * Vue de proximite.
- *
- * Le fond cartographique (rues, batiments) n'est pas encore rendu : le
- * fournisseur de tuiles reste a arbitrer, et c'est une decision a consequence
- * financiere durable -- une facturation au chargement de carte, sur un produit
- * dont le revenu par marchand se compte en centaines de francs, doit etre
- * choisie et pas subie.
- *
- * En attendant, les points sont a leur position REELLE les uns par rapport aux
- * autres, projetes autour de l'utilisateur. Rien n'est invente : c'est une vue
- * relative exacte, sans le decor. Le seul point de remplacement est le composant
- * `SurfaceCarte` ci-dessous.
- */
-function projeter(
-  centre: Position,
-  point: Position,
-  rayonM: number,
-  taille: number,
-): { x: number; y: number } {
-  const metresParDegreLat = 111_320;
-  const metresParDegreLng =
-    111_320 * Math.cos((centre.latitude * Math.PI) / 180);
-
-  const dx = (point.longitude - centre.longitude) * metresParDegreLng;
-  const dy = (point.latitude - centre.latitude) * metresParDegreLat;
-
-  const echelle = taille / 2 / rayonM;
-  return { x: taille / 2 + dx * echelle, y: taille / 2 - dy * echelle };
-}
-
-function SurfaceCarte({
-  centre,
-  marchands,
-  rayonM,
-  selection,
-  onSelectionner,
-}: {
-  centre: Position;
-  marchands: ResultatRecherche[];
-  rayonM: number;
-  selection: string | null;
-  onSelectionner: (id: string) => void;
-}) {
-  const taille = LARGEUR;
-
-  return (
-    <View style={[styles.surface, { height: taille }]}>
-      {[0.33, 0.66, 1].map((part) => (
-        <View
-          key={part}
-          style={[
-            styles.cercle,
-            {
-              width: taille * part,
-              height: taille * part,
-              borderRadius: (taille * part) / 2,
-              left: (taille - taille * part) / 2,
-              top: (taille - taille * part) / 2,
-            },
-          ]}
-        />
-      ))}
-
-      <View style={[styles.moi, { left: taille / 2 - 9, top: taille / 2 - 9 }]} />
-
-      {marchands.map((m) => {
-        const { x, y } = projeter(
-          centre,
-          { latitude: m.latitude, longitude: m.longitude },
-          rayonM,
-          taille,
-        );
-        const actif = selection === m.id;
-        return (
-          <Pressable
-            key={m.id}
-            accessibilityRole="button"
-            accessibilityLabel={m.nom_enseigne}
-            onPress={() => onSelectionner(m.id)}
-            style={[
-              styles.point,
-              actif && styles.pointActif,
-              { left: x - 23, top: y - 23 },
-            ]}
-          >
-            <Text style={[styles.pointTexte, actif && styles.pointTexteActif]}>
-              {m.nom_enseigne.slice(0, 1).toUpperCase()}
-            </Text>
-          </Pressable>
-        );
-      })}
-    </View>
-  );
-}
+const ZOOM_QUARTIER = 14;
 
 export default function Carte() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const etatPosition = usePosition();
   const libelles = useLibellesCategories();
+  const precharger = usePrechargementFiche();
+  const camera = useRef<CameraRef>(null);
+
   const [selection, setSelection] = useState<string | null>(null);
 
   const position =
@@ -136,35 +44,63 @@ export default function Carte() {
   });
 
   const marchands = useMemo(() => recherche.data ?? [], [recherche.data]);
+  const selectionne = useMemo(
+    () => marchands.find((m) => m.id === selection) ?? null,
+    [marchands, selection],
+  );
+
+  const recentrer = () => {
+    etatPosition.rafraichir();
+    camera.current?.flyTo({
+      center: [position.longitude, position.latitude],
+      zoom: ZOOM_QUARTIER,
+      duration: 600,
+    });
+  };
 
   return (
-    <Ecran avecHalo={false}>
-      <ScrollView contentContainerStyle={{ paddingBottom: insets.bottom + espaces.lg }}>
-        <View style={{ height: insets.top + 64 }} />
-
-        <SurfaceCarte
-          centre={position}
-          marchands={marchands}
-          rayonM={RAYON_CARTE_M}
-          selection={selection}
-          onSelectionner={setSelection}
+    <View style={styles.ecran}>
+      <CarteLibre
+        style={StyleSheet.absoluteFill}
+        mapStyle={STYLE_SOMBRE}
+        /**
+         * Le style est embarque dans l'application : quelques kilo-octets qui ne
+         * repartent jamais sur le reseau. Seules les tuiles voyagent, et elles
+         * sont servies par le paquet hors ligne quand il est installe.
+         */
+        attribution
+        onPress={() => setSelection(null)}
+      >
+        <Camera
+          ref={camera}
+          initialViewState={{
+            center: [position.longitude, position.latitude],
+            zoom: ZOOM_QUARTIER,
+          }}
         />
 
-        <View style={styles.liste}>
-          <Text style={styles.intitule}>
-            {marchands.length} commerce{marchands.length > 1 ? "s" : ""} dans un
-            rayon de 3 km
-          </Text>
-          {marchands.slice(0, 10).map((m) => (
-            <CarteCommerce
-              key={m.id}
-              marchand={m}
-              libelleCategorie={libelles.get(m.categorie_slug)}
-              onPress={() => router.push(`/fiche/${m.id}`)}
-            />
-          ))}
-        </View>
-      </ScrollView>
+        <UserLocation />
+
+        {marchands.map((m) => {
+          const Icone = iconeCategorie(m.categorie_slug);
+          const actif = m.id === selection;
+          return (
+            <Marker key={m.id} lngLat={[m.longitude, m.latitude]}>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={m.nom_enseigne}
+                onPress={() => setSelection(m.id)}
+                style={[styles.epingle, actif && styles.epingleActive]}
+              >
+                <Icone
+                  size={20}
+                  color={actif ? couleurs.surAccent : couleurs.accentDoux}
+                />
+              </Pressable>
+            </Marker>
+          );
+        })}
+      </CarteLibre>
 
       <BoutonRond
         Icone={ArrowLeft}
@@ -175,35 +111,60 @@ export default function Carte() {
       <BoutonRond
         Icone={LocateFixed}
         etiquette="Recentrer sur ma position"
-        onPress={etatPosition.rafraichir}
+        onPress={recentrer}
         style={{ position: "absolute", right: espaces.md, top: insets.top + 8 }}
       />
-    </Ecran>
+
+      <View style={[styles.bas, { paddingBottom: insets.bottom + espaces.sm }]}>
+        {selectionne ? (
+          <View style={styles.apercu}>
+            <CarteCommerce
+              marchand={selectionne}
+              libelleCategorie={libelles.get(selectionne.categorie_slug)}
+              onApparait={() => precharger(selectionne.id)}
+              onPress={() => router.push(`/fiche/${selectionne.id}`)}
+            />
+          </View>
+        ) : (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.bandeau}
+          >
+            {marchands.slice(0, 12).map((m) => (
+              <Pressable
+                key={m.id}
+                accessibilityRole="button"
+                style={styles.vignette}
+                onPress={() => {
+                  setSelection(m.id);
+                  precharger(m.id);
+                  camera.current?.flyTo({
+                    center: [m.longitude, m.latitude],
+                    zoom: 16,
+                    duration: 500,
+                  });
+                }}
+              >
+                <Text style={styles.vignetteNom} numberOfLines={1}>
+                  {m.nom_enseigne}
+                </Text>
+                <Text style={styles.vignetteMeta}>
+                  {formaterDistance(m.distance_m)}
+                </Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+        )}
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  surface: {
-    width: "100%",
-    backgroundColor: couleurs.surface1,
-    overflow: "hidden",
-  },
-  cercle: {
-    position: "absolute",
-    borderWidth: 1,
-    borderColor: couleurs.bordure,
-  },
-  moi: {
-    position: "absolute",
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    backgroundColor: couleurs.accent,
-    borderWidth: 3,
-    borderColor: couleurs.bg,
-  },
-  point: {
-    position: "absolute",
+  ecran: { flex: 1, backgroundColor: couleurs.bg },
+
+  epingle: {
     width: 46,
     height: 46,
     borderRadius: 23,
@@ -213,18 +174,37 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  pointActif: { backgroundColor: couleurs.accent, borderColor: couleurs.accent },
-  pointTexte: {
+  epingleActive: {
+    backgroundColor: couleurs.accent,
+    borderColor: couleurs.accent,
+    width: 58,
+    height: 58,
+    borderRadius: 29,
+  },
+
+  bas: { position: "absolute", left: 0, right: 0, bottom: 0 },
+  apercu: { paddingHorizontal: espaces.md },
+  bandeau: { paddingHorizontal: espaces.md, gap: espaces.xs },
+  vignette: {
+    minHeight: 56,
+    justifyContent: "center",
+    gap: 2,
+    paddingHorizontal: espaces.md,
+    paddingVertical: espaces.xs,
+    borderRadius: rayons.pastille,
+    backgroundColor: couleurs.surface2,
+    borderWidth: 1,
+    borderColor: couleurs.bordure,
+    maxWidth: 220,
+  },
+  vignetteNom: {
     color: couleurs.textePrincipal,
-    fontSize: typo.corps,
+    fontSize: typo.repere,
     fontFamily: police.demi,
   },
-  pointTexteActif: { color: couleurs.surAccent },
-
-  liste: { padding: espaces.md, gap: espaces.sm },
-  intitule: {
-    color: couleurs.textePrincipal,
-    fontSize: 15,
-    fontFamily: police.demi,
+  vignetteMeta: {
+    color: couleurs.texteSecondaire,
+    fontSize: typo.libelle,
+    fontFamily: police.moyen,
   },
 });

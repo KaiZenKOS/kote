@@ -3,10 +3,12 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, Download, Store, Trash2 } from "lucide-react-native";
 
 import { Ecran } from "../src/composants/Ecran";
 import { BoutonRond, BoutonSecondaire } from "../src/composants/communs";
+import { formaterOctets } from "../src/carte/horsLigne";
+import { useCarteHorsLigne } from "../src/hooks/useCarteHorsLigne";
 import { tailleJournal, viderJournal } from "../src/journal/file";
 import { viderCacheDisque } from "../src/query/persistance";
 import { couleurs, espaces, police, rayons, typo } from "../src/theme/tokens";
@@ -26,6 +28,7 @@ export default function Aide() {
   const client = useQueryClient();
   const [enAttente, setEnAttente] = useState(0);
   const [videe, setVidee] = useState(false);
+  const carte = useCarteHorsLigne();
 
   useEffect(() => {
     void tailleJournal().then(setEnAttente);
@@ -49,6 +52,26 @@ export default function Aide() {
             onPress={() => router.back()}
           />
           <Text style={styles.titre}>Aide et informations</Text>
+        </View>
+
+        {/**
+         * Entree de l'espace marchand. Le libelle parle de clients, jamais
+         * d'inscription ni d'enregistrement : c'est la regle de positionnement
+         * du cahier des charges (section 3.1).
+         */}
+        <View style={styles.encadre}>
+          <Text style={styles.encadreTitre}>Vous vendez ou vous réparez ?</Text>
+          <Text style={styles.sectionTexte}>
+            Vos clients du quartier vous cherchent. Mettez votre activité sur
+            Koté pour qu'ils vous trouvent et vous écrivent sur WhatsApp.
+          </Text>
+          <View style={styles.actions}>
+            <BoutonSecondaire
+              libelle="Ouvrir mon espace"
+              Icone={Store}
+              onPress={() => router.push("/espace")}
+            />
+          </View>
         </View>
 
         <Section titre="Comment ça marche">
@@ -90,6 +113,34 @@ export default function Aide() {
               "immédiatement et sans avoir à se justifier."
             }
           </Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitre}>Carte hors ligne</Text>
+          <Text style={styles.sectionTexte}>
+            {carte.installe
+              ? `Le fond de carte du Grand Lomé est enregistré sur votre téléphone (${formaterOctets(carte.poids)}). La carte fonctionne sans connexion et ne consomme plus de données.`
+              : "Vous pouvez enregistrer le fond de carte du Grand Lomé une fois pour toutes. La carte fonctionnera ensuite sans connexion, et ne consommera plus jamais de données."}
+          </Text>
+          {carte.progression !== null ? (
+            <Text style={styles.note}>
+              Téléchargement en cours : {carte.progression} %
+            </Text>
+          ) : null}
+          <View style={styles.actions}>
+            <BoutonSecondaire
+              libelle={
+                carte.progression !== null
+                  ? `Téléchargement… ${carte.progression} %`
+                  : carte.installe
+                    ? "Supprimer la carte hors ligne"
+                    : "Enregistrer la carte du Grand Lomé"
+              }
+              Icone={carte.installe ? Trash2 : Download}
+              onPress={carte.installe ? carte.supprimer : carte.telecharger}
+            />
+          </View>
+          {carte.erreur ? <Text style={styles.note}>{carte.erreur}</Text> : null}
         </View>
 
         <View style={styles.section}>

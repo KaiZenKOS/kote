@@ -160,20 +160,76 @@ strictement rien à montrer.
   lots de rendu — au-delà d'une vingtaine de cartes, un `ScrollView` saccade sur
   un Android d'entrée de gamme.
 
+## La carte
+
+**MapLibre + tuiles OpenStreetMap**, pas un service facturé au chargement.
+
+Le raisonnement est économique avant d'être technique : sur un produit dont le
+revenu attendu par marchand se compte en centaines de francs par mois, une
+facturation à l'usage de la carte est un coût qui grandit exactement au rythme
+du succès. MapLibre permet en plus ce que le cahier des charges demande
+explicitement et qu'aucun service facturé ne permet vraiment :
+**pré-télécharger le Grand Lomé**.
+
+- Le style est un JSON sombre embarqué dans l'application
+  ([src/carte/style-sombre.json](src/carte/style-sombre.json)), aux couleurs du
+  `.pen`. Quelques kilo-octets, jamais retéléchargés — seules les tuiles
+  voyagent.
+- Le paquet hors ligne couvre l'emprise du Grand Lomé aux zooms 11 à 16. En
+  dessous, la ville tient dans quelques tuiles ; au-delà, le poids explose pour
+  un gain nul puisqu'on se repère au point de repère, pas au numéro de rue.
+- **Le téléchargement est toujours déclenché par l'utilisateur**, depuis l'écran
+  d'aide, jamais automatiquement. Consommer plusieurs mégaoctets à son insu est
+  exactement ce qui fait désinstaller une application ici.
+
+## Espace marchand et ambassadeur
+
+Ces écrans ne figurent pas dans `togo.pen` : ils reprennent les mêmes jetons
+avec des règles plus strictes, tirées de la section 2.4 du cahier des charges.
+Le critère de réussite est qu'une commerçante de 50 ans y arrive **seule, du
+premier coup**.
+
+- Cibles tactiles de 64 px au lieu de 48, corps de texte à 18 px.
+- Un seul choix par écran quand c'est possible ; création de fiche en trois
+  étapes.
+- Aucune saisie libre obligatoire au-delà du point de repère.
+- Les statuts sont dits en français courant : « brouillon » devient « pas
+  encore publiée », « en_veille » devient « retirée des résultats ».
+- Le discours ne parle jamais de formalisation, d'enregistrement ni
+  d'administration. Le marchand achète de la visibilité et des clients.
+
+| Route | Contenu |
+| --- | --- |
+| `/espace` | Connexion par téléphone, puis tableau de bord ou liste d'inscriptions |
+| `/espace/nouvelle` | Création de fiche en 3 étapes, avec placement sur la carte |
+| `/espace/fiche/[id]` | Statistiques, confirmation d'activité, correction du repère, retrait |
+
+**Le tableau de bord met en avant le nombre de clients qui ont écrit**, pas le
+nombre de vues. C'est la seule preuve concrète que la plateforme sert au
+marchand ; le nombre de vues est plus flatteur mais creux.
+
+**Le droit de retrait est en clair sur l'écran**, pas caché dans un menu : c'est
+la contrepartie de la confiance demandée au marchand (cahier des charges,
+section 9.2).
+
+### Ce qui rend la tournée d'un ambassadeur possible hors ligne
+
+Trois mécanismes se combinent :
+
+1. La création de fiche porte une **clé d'idempotence générée sur le
+   téléphone**. Rejouer la même saisie relit la fiche existante au lieu d'en
+   créer une seconde.
+2. La mutation est donc **persistée sur disque** : l'ambassadeur inscrit dix
+   marchands dans un marché sans couverture, ferme l'application, et tout part
+   au retour du réseau.
+3. Même chose pour la confirmation d'activité — le marchand appuie sur « je suis
+   toujours là » depuis son étal, souvent sans réseau. Perdre ce geste ferait
+   basculer sa fiche en veille alors qu'il vient justement de la confirmer.
+
 ## État d'avancement
 
-Fait : couche de données, thème issu du `.pen`, navigation, et les sept écrans
-ci-dessus branchés sur l'API réelle.
+Écarts assumés par rapport au `.pen` :
 
-Écarts assumés par rapport au `.pen`, à trancher :
-
-- **Le fond cartographique de `/carte` n'est pas rendu.** Le choix du
-  fournisseur de tuiles a une conséquence financière durable — une facturation
-  au chargement de carte, sur un produit dont le revenu par marchand se compte
-  en centaines de francs, doit être choisie et pas subie. En attendant, les
-  points sont à leur position réelle les uns par rapport aux autres, projetés
-  autour de l'utilisateur : une vue relative exacte, sans le décor. Le seul
-  point de remplacement est le composant `SurfaceCarte`.
 - **Le bouton favori de la fiche n'est pas implémenté** : il n'a pas de
   contrepartie côté backend. Plutôt qu'un cœur qui ne mémorise rien, il est
   absent.
@@ -181,3 +237,16 @@ ci-dessus branchés sur l'API réelle.
   puis distance ; un sélecteur sans effet réel serait un contrôle mort.
 - L'icône WhatsApp du `.pen` vient de Phosphor ; Lucide n'a pas d'icône de
   marque, `MessageCircle` la remplace.
+- **Le regroupement des points de la carte** (clusters) n'est pas fait. Régler
+  un rayon de regroupement sans voir le résultat sur un appareil serait de la
+  devinette ; à faire au premier passage sur téléphone réel.
+
+Ce qui n'a pas pu être vérifié ici, et pourquoi :
+
+- **MapLibre exige un build de développement** (`npx expo run:android` ou EAS).
+  Il ne fonctionne pas dans Expo Go. Le code compile et se bundle, mais le rendu
+  n'a pas été observé sur un appareil.
+- **L'authentification par code à usage unique n'est pas testable en local** :
+  la CLI Supabase désactive la connexion par téléphone faute de fournisseur
+  configuré. Le choix du canal — SMS ou WhatsApp — reste ouvert (cahier des
+  charges, section 14, décision 3).

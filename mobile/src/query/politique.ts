@@ -83,6 +83,31 @@ export const POLITIQUE = {
     gcTime: JOUR * 30,
     fenetrePersistance: JOUR * 30,
   },
+
+  /**
+   * Espace marchand et ambassadeur.
+   *
+   * Sa propre fiche doit rester consultable et modifiable hors ligne : un
+   * marchand est sur son etal, pas devant une borne wifi. Les brouillons de
+   * saisie d'un ambassadeur suivent le meme regime -- il travaille dans un
+   * marche, souvent sans couverture.
+   */
+  espace: {
+    staleTime: MINUTE,
+    gcTime: JOUR * 30,
+    fenetrePersistance: JOUR * 30,
+  },
+
+  /**
+   * Tableau de bord. Le marchand le consulte pour savoir si la plateforme lui
+   * sert : ce chiffre doit s'afficher meme sans reseau, quitte a dater de la
+   * veille.
+   */
+  statistiques: {
+    staleTime: MINUTE * 10,
+    gcTime: JOUR * 7,
+    fenetrePersistance: JOUR * 7,
+  },
 } as const satisfies Record<string, ReglageCache>;
 
 export type DomaineCache = keyof typeof POLITIQUE;

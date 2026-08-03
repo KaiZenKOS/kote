@@ -45,6 +45,12 @@ export const cles = {
 
   fiche: (id: string) => ["fiche", id] as const,
   photos: (marchandId: string) => ["photos", marchandId] as const,
+
+  mesFiches: () => ["espace", "mes-fiches"] as const,
+  monAmbassadeur: () => ["espace", "ambassadeur"] as const,
+  mesCommissions: () => ["espace", "commissions"] as const,
+  statistiques: (marchandId: string, jours: number) =>
+    ["statistiques", marchandId, jours] as const,
 } as const;
 
 /** Domaine de cache porte par une cle, ou null si la cle est inconnue. */
@@ -57,6 +63,8 @@ export function domaineDeLaCle(cle: readonly unknown[]): DomaineCache | null {
     "recherche",
     "fiche",
     "photos",
+    "espace",
+    "statistiques",
   ];
   return connus.includes(racine as DomaineCache)
     ? (racine as DomaineCache)

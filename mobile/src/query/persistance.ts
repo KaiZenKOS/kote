@@ -17,7 +17,7 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import type { PersistQueryClientOptions } from "@tanstack/react-query-persist-client";
 
 import { domaineDeLaCle } from "./cles";
-import { CLES_MUTATION } from "./mutations";
+import { MUTATIONS_PERSISTEES } from "./mutations";
 import { POLITIQUE } from "./politique";
 
 const CLE_STOCKAGE = "kote:cache";
@@ -65,10 +65,11 @@ export const optionsPersistance: Omit<PersistQueryClientOptions, "queryClient"> 
 
       shouldDehydrateMutation: (mutation) => {
         const cle = mutation.options.mutationKey;
-        if (!Array.isArray(cle)) return false;
+        if (!Array.isArray(cle) || typeof cle[0] !== "string") return false;
         // Liste blanche explicite. Tout ce qui n'y figure pas est perdu a la
-        // fermeture, ce qui est le comportement voulu par defaut.
-        return cle[0] === CLES_MUTATION.signalement[0];
+        // fermeture, ce qui est le comportement voulu par defaut -- notamment
+        // pour `contact`, dont le rejeu fausserait l'indicateur central.
+        return MUTATIONS_PERSISTEES.includes(cle[0]);
       },
     },
   };
