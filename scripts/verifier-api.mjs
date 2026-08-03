@@ -29,6 +29,27 @@ const enteteBase = {
 
 let echecs = 0;
 
+// Detection de fuite de numero.
+//
+// On cherche deux choses distinctes : un champ dont le nom trahit un numero, et
+// une valeur ressemblant a un numero togolais. Chercher le mot "telephone" dans
+// la reponse entiere ne marche pas : une description de boutique peut
+// legitimement parler de recharges telephoniques.
+function fuiteNumero(lignes) {
+  const cles = new Set();
+  for (const ligne of lignes ?? []) {
+    for (const cle of Object.keys(ligne ?? {})) cles.add(cle);
+  }
+
+  const cleSuspecte = [...cles].find((c) => /telephone|phone|whatsapp|numero/i.test(c));
+  if (cleSuspecte) return `champ expose : ${cleSuspecte}`;
+
+  const valeurSuspecte = JSON.stringify(lignes ?? []).match(/\+?228[\s.-]?\d{8}/);
+  if (valeurSuspecte) return `numero dans une valeur : ${valeurSuspecte[0]}`;
+
+  return null;
+}
+
 function verifier(condition, libelle, detail) {
   if (condition) {
     console.log(`  ok    ${libelle}`);
@@ -59,11 +80,8 @@ async function principal() {
   verifier(vue.ok, "La vue publique repond avec la cle anonyme", { statut: vue.status });
 
   // 3. Aucune fiche publique ne doit contenir de numero, sous quelque nom que ce soit.
-  const serialise = JSON.stringify(fiches);
-  verifier(
-    !/\+?228\d{8}/.test(serialise) && !/telephone/i.test(serialise),
-    "Aucun numero de telephone dans la reponse publique",
-  );
+  const fuiteVue = fuiteNumero(fiches);
+  verifier(fuiteVue === null, "Aucun numero de telephone dans la reponse publique", fuiteVue);
 
   // 4. La recherche de proximite est ouverte.
   const recherche = await fetch(`${URL_API}/rest/v1/rpc/rechercher_marchands`, {
@@ -78,9 +96,11 @@ async function principal() {
     "La recherche renvoie au moins un resultat sur le jeu de donnees local",
     { nombre: Array.isArray(resultats) ? resultats.length : null },
   );
+  const fuiteRecherche = fuiteNumero(resultats);
   verifier(
-    !/telephone/i.test(JSON.stringify(resultats)),
+    fuiteRecherche === null,
     "Les resultats de recherche ne contiennent aucun numero",
+    fuiteRecherche,
   );
 
   // 5. Les distances sont croissantes : le tri de proximite fonctionne.

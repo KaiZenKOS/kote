@@ -54,6 +54,17 @@ enable_confirmations = true
 "22890000001" = "123456"
 "22890000002" = "123456"
 
+[functions.confirmer]
+# Le marchand clique un lien recu par WhatsApp : il n'a aucune session, et lui
+# en demander une reviendrait a tuer la boucle de fraicheur. La protection est
+# le jeton a usage unique porte par l'URL, pas un JWT.
+verify_jwt = false
+
+[functions.entretien]
+# Appelee par un planificateur, pas par un utilisateur. Protegee par le secret
+# partage `CLE_ENTRETIEN`.
+verify_jwt = false
+
 [edge_runtime]
 enabled = true
 policy = "oneshot"

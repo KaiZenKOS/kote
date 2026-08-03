@@ -15,7 +15,7 @@ begin;
 
 create extension if not exists pgtap with schema extensions;
 
-select plan(16);
+select plan(18);
 
 -- 1. Aucune table du schema public ne doit echapper a RLS.
 select is(
@@ -110,6 +110,19 @@ select cmp_ok(
   '>=',
   7,
   'La table marchand porte ses politiques de lecture, de creation et de mise a jour'
+);
+
+-- 17 et 18. Le revers de la medaille : a force de tout revoquer, le backend
+-- lui-meme peut se retrouver sans droit. Ces deux tests attrapent la regression
+-- ou une nouvelle migration cree un objet sans privilege pour service_role, ce
+-- qui fait echouer les fonctions edge en silence cote client.
+select ok(
+  has_table_privilege('service_role', 'public.marchand', 'SELECT'),
+  'Le role de service peut lire la table marchand'
+);
+select ok(
+  has_function_privilege('service_role', 'public.consommer_quota(text,integer,integer)', 'EXECUTE'),
+  'Le role de service peut consommer les quotas'
 );
 
 select * from finish();
