@@ -32,6 +32,11 @@
       "expo-font",
       "expo-splash-screen",
       "@maplibre/maplibre-react-native"
-    ]
+    ],
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    }
   }
 }

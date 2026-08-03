@@ -80,6 +80,50 @@ Expo Go, qui ne sait pas charger MapLibre et afficherait un écran cassé.
 
 ---
 
+## Version web — pour visualiser rapidement
+
+Le plus simple pour regarder les écrans sans émulateur :
+
+```bash
+npm run web --prefix mobile
+```
+
+Puis ouvrez **http://localhost:8090**. Redimensionnez la fenêtre en format
+téléphone pour un rendu fidèle.
+
+C'est aussi le seul moyen de voir le fond de carte tant que l'émulateur n'a pas
+d'accès Internet : le navigateur, lui, en a un.
+
+**Pensez à l'adresse du backend.** `demarrer.ps1` écrit `mobile/.env` pour la
+cible mobile (`10.0.2.2`). Pour le web, il faut `127.0.0.1` :
+
+```bash
+EXPO_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
+```
+
+### Comment le web est possible sans dupliquer les écrans
+
+MapLibre React Native est du code natif, sans équivalent navigateur. Plutôt que
+d'écrire une version web de chaque écran affichant une carte — et donc de
+maintenir deux fois la même logique — **c'est la carte seule qui est
+encapsulée**, dans `src/carte/CarteInteractive.tsx` et son jumeau `.web.tsx`.
+
+| | Android | Web |
+| --- | --- | --- |
+| Moteur | MapLibre React Native | MapLibre GL JS |
+| Fichier de style | `style-sombre.json` | **le même** |
+| Interface du composant | identique | identique |
+
+Même moteur de rendu et même style : ce que montre le navigateur correspond à ce
+que verra un utilisateur, aux interactions tactiles près. Les écrans, eux,
+n'existent qu'en un seul exemplaire.
+
+`src/carte/horsLigne.web.ts` neutralise le téléchargement de tuiles hors ligne,
+qui n'a de sens que sur mobile — et sert surtout à garantir que le bundle web ne
+tire jamais le module natif.
+
+---
+
 ## Les trois pièges que le script vous évite
 
 Ils sont documentés ici parce qu'ils échouent tous **silencieusement** : rien ne

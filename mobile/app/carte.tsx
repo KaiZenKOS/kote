@@ -1,20 +1,12 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import {
-  Camera,
-  Map as CarteLibre,
-  Marker,
-  UserLocation,
-  type CameraRef,
-} from "@maplibre/maplibre-react-native";
 import { ArrowLeft, LocateFixed } from "lucide-react-native";
 
-import { STYLE_SOMBRE } from "../src/carte/horsLigne";
+import { CarteInteractive } from "../src/carte/CarteInteractive";
 import { BoutonRond } from "../src/composants/communs";
 import { CarteCommerce, formaterDistance } from "../src/composants/cartes";
-import { iconeCategorie } from "../src/composants/icones";
 import { useLibellesCategories } from "../src/hooks/useLibelles";
 import { usePrechargementFiche } from "../src/hooks/useFiche";
 import { useRecherche } from "../src/hooks/useRecherche";
@@ -30,7 +22,11 @@ export default function Carte() {
   const etatPosition = usePosition();
   const libelles = useLibellesCategories();
   const precharger = usePrechargementFiche();
-  const camera = useRef<CameraRef>(null);
+  const [recentrage, setRecentrage] = useState<{
+    position: { latitude: number; longitude: number };
+    zoom?: number;
+    cle: number;
+  } | null>(null);
 
   const [selection, setSelection] = useState<string | null>(null);
   /**
@@ -58,58 +54,26 @@ export default function Carte() {
 
   const recentrer = () => {
     etatPosition.rafraichir();
-    camera.current?.flyTo({
-      center: [position.longitude, position.latitude],
-      zoom: ZOOM_QUARTIER,
-      duration: 600,
-    });
+    setRecentrage({ position, zoom: ZOOM_QUARTIER, cle: Date.now() });
   };
 
   return (
     <View style={styles.ecran}>
-      <CarteLibre
-        style={StyleSheet.absoluteFill}
-        mapStyle={STYLE_SOMBRE}
-        /**
-         * Le style est embarque dans l'application : quelques kilo-octets qui ne
-         * repartent jamais sur le reseau. Seules les tuiles voyagent, et elles
-         * sont servies par le paquet hors ligne quand il est installe.
-         */
-        attribution
-        onPress={() => setSelection(null)}
-        onDidFailLoadingMap={() => setFondIndisponible(true)}
-        onDidFinishLoadingStyle={() => setFondIndisponible(false)}
-      >
-        <Camera
-          ref={camera}
-          initialViewState={{
-            center: [position.longitude, position.latitude],
-            zoom: ZOOM_QUARTIER,
-          }}
-        />
-
-        <UserLocation />
-
-        {marchands.map((m) => {
-          const Icone = iconeCategorie(m.categorie_slug);
-          const actif = m.id === selection;
-          return (
-            <Marker key={m.id} lngLat={[m.longitude, m.latitude]}>
-              <Pressable
-                accessibilityRole="button"
-                accessibilityLabel={m.nom_enseigne}
-                onPress={() => setSelection(m.id)}
-                style={[styles.epingle, actif && styles.epingleActive]}
-              >
-                <Icone
-                  size={20}
-                  color={actif ? couleurs.surAccent : couleurs.accentDoux}
-                />
-              </Pressable>
-            </Marker>
-          );
-        })}
-      </CarteLibre>
+      <CarteInteractive
+        centre={position}
+        zoom={ZOOM_QUARTIER}
+        marqueurs={marchands.map((m) => ({
+          id: m.id,
+          latitude: m.latitude,
+          longitude: m.longitude,
+          icone: m.categorie_slug,
+        }))}
+        selection={selection}
+        onSelectionner={(id) => setSelection(id || null)}
+        onEchecFond={() => setFondIndisponible(true)}
+        onFondCharge={() => setFondIndisponible(false)}
+        recentrerSur={recentrage}
+      />
 
       <BoutonRond
         Icone={ArrowLeft}
@@ -157,10 +121,10 @@ export default function Carte() {
                 onPress={() => {
                   setSelection(m.id);
                   precharger(m.id);
-                  camera.current?.flyTo({
-                    center: [m.longitude, m.latitude],
+                  setRecentrage({
+                    position: { latitude: m.latitude, longitude: m.longitude },
                     zoom: 16,
-                    duration: 500,
+                    cle: Date.now(),
                   });
                 }}
               >
@@ -182,23 +146,6 @@ export default function Carte() {
 const styles = StyleSheet.create({
   ecran: { flex: 1, backgroundColor: couleurs.bg },
 
-  epingle: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: couleurs.surface2,
-    borderWidth: 1.5,
-    borderColor: couleurs.bordure,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  epingleActive: {
-    backgroundColor: couleurs.accent,
-    borderColor: couleurs.accent,
-    width: 58,
-    height: 58,
-    borderRadius: 29,
-  },
 
   avis: {
     position: "absolute",

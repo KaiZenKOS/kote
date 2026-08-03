@@ -2,15 +2,10 @@ import { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import {
-  Camera as CameraLibre,
-  Map as CarteLibre,
-  Marker,
-} from "@maplibre/maplibre-react-native";
 import { ArrowLeft, ArrowRight, Check, CircleCheck } from "lucide-react-native";
 
 import { normaliserTelephone } from "../../src/api/compte";
-import { STYLE_SOMBRE } from "../../src/carte/horsLigne";
+import { CarteInteractive } from "../../src/carte/CarteInteractive";
 import { Ecran } from "../../src/composants/Ecran";
 import { BoutonRond } from "../../src/composants/communs";
 import { Etape, GrandBouton, GrandChamp, GrandChoix } from "../../src/composants/espace";
@@ -185,35 +180,13 @@ export default function NouvelleFiche() {
             </Text>
 
             <View style={styles.carte}>
-              <CarteLibre
-                style={StyleSheet.absoluteFill}
-                mapStyle={STYLE_SOMBRE}
-                attribution
-                onPress={(evenement) => {
-                  const lngLat = (
-                    evenement.nativeEvent as unknown as {
-                      lngLat?: [number, number];
-                    }
-                  ).lngLat;
-                  if (!lngLat) return;
-                  setPoint({ longitude: lngLat[0], latitude: lngLat[1] });
-                }}
-              >
-                <CameraLibre
-                  initialViewState={{
-                    center: [
-                      positionParDefaut.longitude,
-                      positionParDefaut.latitude,
-                    ],
-                    zoom: 17,
-                  }}
-                />
-                {point ? (
-                  <Marker lngLat={[point.longitude, point.latitude]}>
-                    <View style={styles.epingle} />
-                  </Marker>
-                ) : null}
-              </CarteLibre>
+              <CarteInteractive
+                centre={positionParDefaut}
+                zoom={17}
+                afficherMaPosition={false}
+                marqueurPlacement={point}
+                onAppui={(p) => setPoint(p)}
+              />
             </View>
 
             <Text style={styles.etat}>
@@ -249,14 +222,6 @@ const styles = StyleSheet.create({
     borderRadius: rayons.tuile,
     overflow: "hidden",
     backgroundColor: couleurs.surface1,
-  },
-  epingle: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: couleurs.accent,
-    borderWidth: 4,
-    borderColor: couleurs.bg,
   },
   etat: {
     color: couleurs.texteSecondaire,
