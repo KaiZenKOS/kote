@@ -14,7 +14,8 @@
 param(
     [switch]$Reinitialiser,
     [switch]$SansApp,
-    [switch]$Tests
+    [switch]$Tests,
+    [switch]$Production
 )
 
 # "Continue" et non "Stop" : en PowerShell 5.1, la moindre ligne ecrite sur la
@@ -156,7 +157,14 @@ if ($appareils.Count -eq 0) {
     if (-not $avds) { throw "Aucun telephone connecte et aucun emulateur configure." }
     $avd = @($avds)[0]
     Info "Demarrage de l'emulateur $avd..."
-    Start-Process -FilePath $emulateur -ArgumentList "-avd", $avd -WindowStyle Minimized
+    # -dns-server : l'emulateur herite parfois d'une configuration DNS vide et
+    # ne resout alors plus aucun nom d'hote. Les donnees Supabase continuent de
+    # passer, car 10.0.2.2 est une adresse IP, mais le fond de carte
+    # (tiles.openfreemap.org) echoue silencieusement. On force donc un
+    # resolveur connu.
+    Start-Process -FilePath $emulateur `
+        -ArgumentList "-avd", $avd, "-dns-server", "8.8.8.8,1.1.1.1" `
+        -WindowStyle Minimized
 
     Info "Attente du demarrage complet (cela peut prendre plusieurs minutes)..."
     $limite = (Get-Date).AddMinutes(8)
@@ -241,7 +249,6 @@ if ($estEmulateur) {
 # 8. Compilation et lancement
 # ---------------------------------------------------------------------------
 Etape "Compilation de l'application"
-Info "Le premier build prend 10 a 20 minutes. Les suivants sont rapides."
 
 # On cible l'appareil par ANDROID_SERIAL plutot que par --device : cette option
 # attend le NOM de l'AVD pour un emulateur et le numero de serie pour un
@@ -251,7 +258,22 @@ $env:ANDROID_SERIAL = $cible
 
 Push-Location $mobile
 try {
-    npx expo run:android
+    if ($Production) {
+        # Build de production : le JavaScript est empaquete DANS l'apk. Aucun
+        # serveur en face, l'application se lance depuis son icone comme
+        # n'importe quelle autre. C'est la forme a installer sur le telephone
+        # d'un ambassadeur qui part en tournee.
+        Info "Build de production : le code est empaquete dans l'application."
+        Info "Aucun serveur ne sera necessaire ensuite."
+        npx expo run:android --variant release
+    } else {
+        # Build de developpement : l'application va chercher son code sur Metro
+        # a chaque lancement, ce qui permet le rechargement instantane. Sans
+        # Metro en face, elle affiche un ecran vide -- c'est normal.
+        Info "Build de developpement : Metro doit rester ouvert."
+        Info "Pour une application autonome, relancez avec -Production."
+        npx expo run:android
+    }
 } finally {
     Pop-Location
 }

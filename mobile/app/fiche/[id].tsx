@@ -12,6 +12,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   ArrowLeft,
+  Heart,
   House,
   Info,
   MapPin,
@@ -35,6 +36,7 @@ import {
   TuileInfo,
 } from "../../src/composants/communs";
 import { formaterDistance } from "../../src/composants/cartes";
+import { useFavoris } from "../../src/favoris";
 import { distanceM } from "../../src/geo";
 import { useContactWhatsApp, useItineraire } from "../../src/hooks/useActions";
 import { useFiche, useVueFiche } from "../../src/hooks/useFiche";
@@ -52,6 +54,7 @@ export default function Fiche() {
   const fiche = useFiche(id ?? null);
   const libelles = useLibellesCategories();
   const contact = useContactWhatsApp();
+  const favoris = useFavoris();
   const ouvrirItineraire = useItineraire();
 
   useVueFiche(id ?? null);
@@ -258,6 +261,24 @@ export default function Fiche() {
         etiquette="Retour"
         onPress={() => router.back()}
         style={{ position: "absolute", left: espaces.md, top: insets.top + 8 }}
+      />
+
+      {/**
+       * Favori entierement local : rien ne part au serveur, aucun compte n'est
+       * demande. C'est la reponse a « faut-il un compte client ? » -- le seul
+       * service qu'il rendrait ici tient sur le telephone, et fonctionne hors
+       * ligne par-dessus le marche.
+       */}
+      <BoutonRond
+        Icone={Heart}
+        etiquette={
+          favoris.estFavori(donnees.id)
+            ? "Retirer des favoris"
+            : "Ajouter aux favoris"
+        }
+        actif={favoris.estFavori(donnees.id)}
+        onPress={() => void favoris.basculer(donnees.id)}
+        style={{ position: "absolute", right: espaces.md, top: insets.top + 8 }}
       />
     </Ecran>
   );

@@ -33,6 +33,13 @@ export default function Carte() {
   const camera = useRef<CameraRef>(null);
 
   const [selection, setSelection] = useState<string | null>(null);
+  /**
+   * Le fond de carte peut ne pas se charger : pas de reseau, ou paquet hors
+   * ligne absent. Ce n'est pas une panne mais un cas nominal ici -- et il ne
+   * doit jamais bloquer l'ecran. Les commerces, eux, viennent du cache et
+   * restent affichables : c'est la liste qui compte, pas le decor.
+   */
+  const [fondIndisponible, setFondIndisponible] = useState(false);
 
   const position =
     etatPosition.statut === "prete" ? etatPosition.position : CENTRE_LOME;
@@ -70,6 +77,8 @@ export default function Carte() {
          */
         attribution
         onPress={() => setSelection(null)}
+        onDidFailLoadingMap={() => setFondIndisponible(true)}
+        onDidFinishLoadingStyle={() => setFondIndisponible(false)}
       >
         <Camera
           ref={camera}
@@ -114,6 +123,15 @@ export default function Carte() {
         onPress={recentrer}
         style={{ position: "absolute", right: espaces.md, top: insets.top + 8 }}
       />
+
+      {fondIndisponible ? (
+        <View style={[styles.avis, { top: insets.top + 8 + 48 + espaces.sm }]}>
+          <Text style={styles.avisTexte}>
+            Fond de carte indisponible sans connexion. Les commerces et leurs
+            points de repère restent accessibles ci-dessous.
+          </Text>
+        </View>
+      ) : null}
 
       <View style={[styles.bas, { paddingBottom: insets.bottom + espaces.sm }]}>
         {selectionne ? (
@@ -180,6 +198,23 @@ const styles = StyleSheet.create({
     width: 58,
     height: 58,
     borderRadius: 29,
+  },
+
+  avis: {
+    position: "absolute",
+    left: espaces.md,
+    right: espaces.md,
+    padding: espaces.sm,
+    borderRadius: rayons.tuile,
+    backgroundColor: couleurs.surface2,
+    borderWidth: 1,
+    borderColor: couleurs.bordure,
+  },
+  avisTexte: {
+    color: couleurs.texteSecondaire,
+    fontSize: typo.libelle,
+    fontFamily: police.moyen,
+    lineHeight: typo.libelle * 1.4,
   },
 
   bas: { position: "absolute", left: 0, right: 0, bottom: 0 },

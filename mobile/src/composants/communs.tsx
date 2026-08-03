@@ -144,20 +144,28 @@ export function BoutonRond({
   onPress,
   style,
   etiquette,
+  actif,
 }: {
   Icone: LucideIcon;
   onPress: () => void;
   style?: ViewStyle;
   etiquette: string;
+  /** Etat enfonce, pour les bascules comme le favori. */
+  actif?: boolean;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={etiquette}
+      accessibilityState={actif !== undefined ? { selected: actif } : undefined}
       onPress={onPress}
       style={({ pressed }) => [styles.rond, style, pressed && styles.presse]}
     >
-      <Icone size={22} color={couleurs.textePrincipal} />
+      <Icone
+        size={22}
+        color={actif ? couleurs.accent : couleurs.textePrincipal}
+        fill={actif ? couleurs.accent : "transparent"}
+      />
     </Pressable>
   );
 }
