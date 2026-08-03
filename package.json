@@ -1,20 +1,18 @@
 {
-  "name": "projet-marche-togo",
+  "name": "kote",
   "version": "0.1.0",
   "private": true,
-  "description": "Backend d'une plateforme de visibilite des commercants et artisans au Togo",
-  "type": "module",
+  "description": "Koté — plateforme de visibilité des commerçants et artisans au Togo",
   "scripts": {
-    "demarrer": "supabase start",
-    "arreter": "supabase stop",
-    "etat": "supabase status",
-    "reinitialiser": "supabase db reset",
-    "tester": "supabase test db",
-    "verifier": "node scripts/verifier-api.mjs",
-    "servir": "supabase functions serve --no-verify-jwt",
-    "types": "supabase gen types typescript --local > types/base.ts"
+    "demarrer": "powershell -ExecutionPolicy Bypass -File ./demarrer.ps1",
+    "backend": "supabase start",
+    "backend:arret": "supabase stop",
+    "backend:etat": "supabase status",
+    "backend:reset": "supabase db reset",
+    "backend:test": "supabase test db",
+    "verifier": "node scripts/verifier-api.mjs"
   },
   "devDependencies": {
-    "supabase": "^2.0.0"
+    "supabase": "^2.111.0"
   }
 }
