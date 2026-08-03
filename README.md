@@ -5,8 +5,11 @@ Backend d'une plateforme de visibilité des commerçants et artisans au Togo.
 côté de chez vous. Le nom ne désigne aucun métier, ce qui préserve l'étendue de
 l'offre côté client, et ne porte aucune connotation administrative ni fiscale.
 
+**Pour lancer le projet : [DEMARRAGE.md](DEMARRAGE.md).**
+
 Le cahier des charges fait foi : [docs/cahier-des-charges.md](docs/cahier-des-charges.md).
 Le prompt de maquette : [docs/prompt-pencil.md](docs/prompt-pencil.md).
+L'application mobile : [mobile/README.md](mobile/README.md).
 
 Ce dépôt ne contient que le backend. L'interface viendra ensuite, sur la base
 d'une API déjà stable et interrogeable.
