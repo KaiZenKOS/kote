@@ -8,3 +8,7 @@ supabase/.env
 *.log
 .DS_Store
 Thumbs.db
+
+# Journaux de build local
+build.log
+build.err

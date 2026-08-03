@@ -243,9 +243,15 @@ if ($estEmulateur) {
 Etape "Compilation de l'application"
 Info "Le premier build prend 10 a 20 minutes. Les suivants sont rapides."
 
+# On cible l'appareil par ANDROID_SERIAL plutot que par --device : cette option
+# attend le NOM de l'AVD pour un emulateur et le numero de serie pour un
+# telephone, alors qu'adb ne connait que le numero de serie. La variable
+# d'environnement est comprise par les deux.
+$env:ANDROID_SERIAL = $cible
+
 Push-Location $mobile
 try {
-    npx expo run:android --device $cible
+    npx expo run:android
 } finally {
     Pop-Location
 }

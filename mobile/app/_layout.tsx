@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { View } from "react-native";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
@@ -30,7 +31,14 @@ export default function DispositionRacine() {
 
   // On attend les polices : afficher d'abord en police systeme puis basculer
   // ferait sauter toute la mise en page sous les yeux de l'utilisateur.
-  if (!policesPretes) return null;
+  //
+  // Mais on rend le fond de la marque, pas `null` : un composant vide laisse
+  // voir le fond de fenetre, noir pur, et l'ouverture commence donc par un
+  // clignotement noir avant de virer au brun chaud. Sur un appareil lent --
+  // la cible -- ce clignotement dure plusieurs secondes.
+  if (!policesPretes) {
+    return <View style={{ flex: 1, backgroundColor: couleurs.bg }} />;
+  }
 
   return (
     <SafeAreaProvider>
