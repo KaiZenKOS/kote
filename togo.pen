@@ -1,0 +1,2614 @@
+{
+  "version": "2.14",
+  "children": [
+    {
+      "type": "frame",
+      "id": "lLNAu",
+      "x": 0,
+      "y": 0,
+      "name": "Status Bar",
+      "reusable": true,
+      "width": 390,
+      "height": 62,
+      "padding": [
+        0,
+        24
+      ],
+      "justifyContent": "space_between",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "text",
+          "id": "VywWE",
+          "name": "Time",
+          "fill": "$text-primary",
+          "content": "9:41",
+          "fontFamily": "Inter",
+          "fontSize": 16,
+          "fontWeight": "600"
+        },
+        {
+          "type": "frame",
+          "id": "F4yQFK",
+          "name": "Indicators",
+          "gap": 6,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "mwIos",
+              "name": "Signal",
+              "width": 18,
+              "height": 18,
+              "icon": "signal-high",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "type": "icon",
+              "id": "FP5mc",
+              "name": "Wifi",
+              "width": 18,
+              "height": 18,
+              "icon": "wifi",
+              "library": "lucide",
+              "fill": "$text-primary"
+            },
+            {
+              "type": "icon",
+              "id": "DYTZ0",
+              "name": "Battery",
+              "width": 22,
+              "height": 22,
+              "icon": "battery-medium",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "t2Kqh",
+      "x": 0,
+      "y": 100,
+      "name": "Pastille de fraicheur",
+      "reusable": true,
+      "fill": "$surface2",
+      "cornerRadius": 999,
+      "gap": 8,
+      "padding": [
+        6,
+        10
+      ],
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "ellipse",
+          "id": "K9bhiy",
+          "name": "Dot",
+          "fill": "$fresh-good",
+          "width": 8,
+          "height": 8
+        },
+        {
+          "type": "text",
+          "id": "cbMOp",
+          "name": "Text",
+          "fill": "$text-secondary",
+          "content": "confirmé il y a 5 jours",
+          "fontFamily": "$font",
+          "fontSize": 13,
+          "fontWeight": "500"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "aDxxZ",
+      "x": 0,
+      "y": 170,
+      "name": "Puce de categorie",
+      "reusable": true,
+      "width": 112,
+      "fill": "$surface1",
+      "cornerRadius": 20,
+      "layout": "vertical",
+      "gap": 8,
+      "padding": 16,
+      "children": [
+        {
+          "type": "frame",
+          "id": "p2TSg",
+          "name": "Icon Badge",
+          "width": 44,
+          "height": 44,
+          "fill": "$surface2",
+          "cornerRadius": 999,
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "jK6Mq",
+              "name": "Glyph",
+              "width": 22,
+              "height": 22,
+              "icon": "shirt",
+              "library": "lucide",
+              "fill": "$accent-soft"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "Kjetg",
+          "name": "Label",
+          "fill": "$text-primary",
+          "textGrowth": "fixed-width",
+          "width": "fill_container",
+          "content": "Couture et mode",
+          "lineHeight": 1.25,
+          "fontFamily": "$font",
+          "fontSize": 13,
+          "fontWeight": "600"
+        },
+        {
+          "type": "text",
+          "id": "r8ISYN",
+          "name": "Count",
+          "fill": "$text-secondary",
+          "content": "12 ouverts",
+          "fontFamily": "$font",
+          "fontSize": 13,
+          "fontWeight": "500"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "qAgKq",
+      "x": 0,
+      "y": 340,
+      "name": "Tuile d'information",
+      "reusable": true,
+      "width": 170,
+      "fill": "$surface2",
+      "cornerRadius": 20,
+      "layout": "vertical",
+      "gap": 4,
+      "padding": 16,
+      "children": [
+        {
+          "type": "text",
+          "id": "gM0is",
+          "name": "Label",
+          "fill": "$text-secondary",
+          "content": "DISTANCE",
+          "fontFamily": "$font",
+          "fontSize": 13,
+          "fontWeight": "500",
+          "letterSpacing": 0.8
+        },
+        {
+          "type": "text",
+          "id": "csYB2",
+          "name": "Value",
+          "fill": "$text-primary",
+          "content": "240 m",
+          "fontFamily": "$font",
+          "fontSize": 26,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "g6bfz",
+      "x": 0,
+      "y": 470,
+      "name": "Bouton principal",
+      "reusable": true,
+      "width": 358,
+      "fill": "$accent",
+      "cornerRadius": 999,
+      "gap": 8,
+      "padding": [
+        16,
+        24
+      ],
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "icon",
+          "id": "eXwzB",
+          "name": "Icon",
+          "width": 20,
+          "height": 20,
+          "icon": "whatsapp-logo",
+          "library": "phosphor",
+          "fill": "$on-accent"
+        },
+        {
+          "type": "text",
+          "id": "p3zE6",
+          "name": "Label",
+          "fill": "$on-accent",
+          "content": "Contacter sur WhatsApp",
+          "fontFamily": "$font",
+          "fontSize": 16,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "lRMck",
+      "x": 0,
+      "y": 540,
+      "name": "Bouton secondaire",
+      "reusable": true,
+      "width": 358,
+      "cornerRadius": 999,
+      "stroke": "$text-secondary",
+      "strokeWidth": 1.5,
+      "gap": 8,
+      "padding": [
+        16,
+        24
+      ],
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "icon",
+          "id": "nC2zB",
+          "name": "Icon",
+          "width": 20,
+          "height": 20,
+          "icon": "navigation",
+          "library": "lucide",
+          "fill": "$text-primary"
+        },
+        {
+          "type": "text",
+          "id": "X5D5i",
+          "name": "Label",
+          "fill": "$text-primary",
+          "content": "Itinéraire",
+          "fontFamily": "$font",
+          "fontSize": 16,
+          "fontWeight": "600"
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "uc3Ix",
+      "x": 0,
+      "y": 640,
+      "name": "Carte de commerce",
+      "reusable": true,
+      "width": 358,
+      "fill": "$surface1",
+      "cornerRadius": 28,
+      "gap": 12,
+      "padding": 12,
+      "children": [
+        {
+          "type": "frame",
+          "id": "oPeQP",
+          "name": "Photo",
+          "clip": true,
+          "width": 96,
+          "height": 96,
+          "fill": "$surface2",
+          "cornerRadius": 20
+        },
+        {
+          "type": "frame",
+          "id": "U5mr07",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 6,
+          "children": [
+            {
+              "type": "text",
+              "id": "YHC3q",
+              "name": "Name",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Atelier Afiavi Couture",
+              "lineHeight": 1.15,
+              "fontFamily": "$font",
+              "fontSize": 18,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "roCyY",
+              "name": "Meta",
+              "fill": "$text-secondary",
+              "content": "Couture et mode · 240 m",
+              "fontFamily": "$font",
+              "fontSize": 13,
+              "fontWeight": "500"
+            },
+            {
+              "type": "text",
+              "id": "ftpi6",
+              "name": "Landmark",
+              "fill": "$text-secondary",
+              "textGrowth": "fixed-width-height",
+              "width": "fill_container",
+              "height": 38,
+              "content": "En face de la pharmacie du carrefour, première porte à gauche",
+              "lineHeight": 1.3,
+              "fontFamily": "$font",
+              "fontSize": 14
+            },
+            {
+              "type": "frame",
+              "id": "Kwasq",
+              "name": "Freshness",
+              "fill": "$surface2",
+              "cornerRadius": 999,
+              "gap": 8,
+              "padding": [
+                6,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "ellipse",
+                  "id": "uFdNu",
+                  "name": "Dot",
+                  "fill": "$fresh-good",
+                  "width": 8,
+                  "height": 8
+                },
+                {
+                  "type": "text",
+                  "id": "xWxHl",
+                  "name": "FreshText",
+                  "fill": "$text-secondary",
+                  "content": "confirmé il y a 5 jours",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "hs4aD",
+      "x": 0,
+      "y": 865,
+      "name": "1 · Accueil",
+      "clip": true,
+      "width": 390,
+      "fill": [
+        "$bg",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "enabled": true,
+          "rotation": 0,
+          "size": {
+            "width": 1.15,
+            "height": 0.5
+          },
+          "colors": [
+            {
+              "color": "$halo",
+              "position": 0
+            },
+            {
+              "color": "$halo-clear",
+              "position": 1
+            }
+          ],
+          "center": {
+            "y": 0
+          }
+        }
+      ],
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "Q56yr",
+          "type": "ref",
+          "ref": "lLNAu",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "iQora",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            8,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "h3o3t",
+              "name": "Header",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "tNbLV",
+                  "name": "Greeting",
+                  "layout": "vertical",
+                  "gap": 2,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "UlhA8",
+                      "name": "Wordmark",
+                      "fill": "$accent-soft",
+                      "content": "Koté",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "700",
+                      "letterSpacing": 0.5
+                    },
+                    {
+                      "type": "text",
+                      "id": "N0X9qR",
+                      "name": "Salutation",
+                      "fill": "$text-primary",
+                      "content": "Bonsoir",
+                      "fontFamily": "$font",
+                      "fontSize": 22,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "L6MHX",
+                  "name": "Avatar",
+                  "width": 48,
+                  "height": 48,
+                  "fill": "$surface2",
+                  "cornerRadius": 999,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "qWbPR",
+                      "name": "Initial",
+                      "fill": "$text-primary",
+                      "content": "A",
+                      "fontFamily": "$font",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "umq8A",
+              "name": "Search",
+              "clip": true,
+              "width": "fill_container",
+              "fill": "$surface1",
+              "cornerRadius": 999,
+              "gap": 12,
+              "padding": [
+                16,
+                20
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "JIhX9",
+                  "name": "SearchIcon",
+                  "width": 22,
+                  "height": 22,
+                  "icon": "search",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                },
+                {
+                  "type": "text",
+                  "id": "q3qBUu",
+                  "name": "Placeholder",
+                  "fill": "$text-secondary",
+                  "content": "Que cherchez-vous ? Couturière, mécanicien…",
+                  "fontFamily": "$font",
+                  "fontSize": 16
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "xrMU4",
+              "name": "Categories",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "X4QTF",
+                  "name": "CatLabel",
+                  "fill": "$text-secondary",
+                  "content": "CATÉGORIES",
+                  "fontFamily": "$font",
+                  "fontSize": 13,
+                  "fontWeight": "500",
+                  "letterSpacing": 0.8
+                },
+                {
+                  "type": "frame",
+                  "id": "zE3Qj",
+                  "name": "CatRow1",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "X8Cgge",
+                      "type": "ref",
+                      "ref": "aDxxZ",
+                      "name": "Couture et mode",
+                      "width": "fill_container",
+                      "descendants": {
+                        "jK6Mq": {
+                          "icon": "shirt"
+                        },
+                        "Kjetg": {
+                          "content": "Couture et mode"
+                        },
+                        "r8ISYN": {
+                          "content": "12 ouverts"
+                        }
+                      }
+                    },
+                    {
+                      "id": "E6lM8",
+                      "type": "ref",
+                      "ref": "aDxxZ",
+                      "name": "Nourriture et boissons",
+                      "width": "fill_container",
+                      "descendants": {
+                        "jK6Mq": {
+                          "icon": "utensils-crossed"
+                        },
+                        "Kjetg": {
+                          "content": "Nourriture et boissons"
+                        },
+                        "r8ISYN": {
+                          "content": "24 ouverts"
+                        }
+                      }
+                    },
+                    {
+                      "id": "Z67HN",
+                      "type": "ref",
+                      "ref": "aDxxZ",
+                      "name": "Beauté et coiffure",
+                      "width": "fill_container",
+                      "descendants": {
+                        "jK6Mq": {
+                          "icon": "scissors"
+                        },
+                        "Kjetg": {
+                          "content": "Beauté et coiffure"
+                        },
+                        "r8ISYN": {
+                          "content": "9 ouverts"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "m6Onq",
+                  "name": "CatRow2",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "qJCs4",
+                      "type": "ref",
+                      "ref": "aDxxZ",
+                      "name": "Mécanique et deux-roues",
+                      "width": "fill_container",
+                      "descendants": {
+                        "jK6Mq": {
+                          "icon": "bike"
+                        },
+                        "Kjetg": {
+                          "content": "Mécanique et deux-roues"
+                        },
+                        "r8ISYN": {
+                          "content": "7 ouverts"
+                        }
+                      }
+                    },
+                    {
+                      "id": "WkDFi",
+                      "type": "ref",
+                      "ref": "aDxxZ",
+                      "name": "Réparation et bricolage",
+                      "width": "fill_container",
+                      "descendants": {
+                        "jK6Mq": {
+                          "icon": "wrench"
+                        },
+                        "Kjetg": {
+                          "content": "Réparation et bricolage"
+                        },
+                        "r8ISYN": {
+                          "content": "5 ouverts"
+                        }
+                      }
+                    },
+                    {
+                      "id": "sSLdr",
+                      "type": "ref",
+                      "ref": "aDxxZ",
+                      "name": "Commerce et revente",
+                      "width": "fill_container",
+                      "descendants": {
+                        "jK6Mq": {
+                          "icon": "store"
+                        },
+                        "Kjetg": {
+                          "content": "Commerce et revente"
+                        },
+                        "r8ISYN": {
+                          "content": "15 ouverts"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "OcFqd",
+              "name": "Près de vous",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "H2JBR",
+                  "name": "NearTitle",
+                  "fill": "$text-primary",
+                  "content": "Près de vous",
+                  "fontFamily": "$font",
+                  "fontSize": 22,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "MP2Rp",
+                  "name": "List",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "id": "f2qWMg",
+                      "type": "ref",
+                      "ref": "uc3Ix",
+                      "name": "Card Afiavi",
+                      "width": "fill_container",
+                      "descendants": {
+                        "oPeQP": {
+                          "type": "frame",
+                          "id": "xTqrn",
+                          "name": "Photo",
+                          "clip": true,
+                          "width": 96,
+                          "height": 96,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "./images/generated-1785747983340.png",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 20
+                        },
+                        "YHC3q": {
+                          "content": "Atelier Afiavi Couture"
+                        },
+                        "roCyY": {
+                          "content": "Couture et mode · 240 m"
+                        },
+                        "ftpi6": {
+                          "content": "En face de la pharmacie du carrefour, première porte à gauche"
+                        },
+                        "uFdNu": {
+                          "fill": "$fresh-good"
+                        },
+                        "xWxHl": {
+                          "content": "confirmé il y a 5 jours"
+                        }
+                      }
+                    },
+                    {
+                      "id": "yYzAh",
+                      "type": "ref",
+                      "ref": "uc3Ix",
+                      "name": "Card Adjo",
+                      "width": "fill_container",
+                      "descendants": {
+                        "oPeQP": {
+                          "type": "frame",
+                          "id": "RQMDj",
+                          "name": "Photo",
+                          "clip": true,
+                          "width": 96,
+                          "height": 96,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "./images/generated-1785747984009.png",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 20
+                        },
+                        "YHC3q": {
+                          "content": "Chez Mama Adjo"
+                        },
+                        "roCyY": {
+                          "content": "Nourriture et boissons · 310 m"
+                        },
+                        "ftpi6": {
+                          "content": "Sous le grand manguier, en face de l'école primaire"
+                        },
+                        "uFdNu": {
+                          "fill": "$fresh-good"
+                        },
+                        "xWxHl": {
+                          "content": "confirmé il y a 2 jours"
+                        }
+                      }
+                    },
+                    {
+                      "id": "ceEpO",
+                      "type": "ref",
+                      "ref": "uc3Ix",
+                      "name": "Card Akosua",
+                      "width": "fill_container",
+                      "descendants": {
+                        "oPeQP": {
+                          "type": "frame",
+                          "id": "Ppuiy",
+                          "name": "Photo",
+                          "clip": true,
+                          "width": 96,
+                          "height": 96,
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "./images/generated-1785747985092.png",
+                            "mode": "fill"
+                          },
+                          "cornerRadius": 20
+                        },
+                        "YHC3q": {
+                          "content": "Salon Akosua"
+                        },
+                        "roCyY": {
+                          "content": "Beauté et coiffure · 600 m"
+                        },
+                        "ftpi6": {
+                          "content": "À côté de la station-service, portail bleu"
+                        },
+                        "uFdNu": {
+                          "fill": "$fresh-check"
+                        },
+                        "xWxHl": {
+                          "content": "à confirmer"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "NIi4e",
+              "name": "FAB Wrap",
+              "width": "fill_container",
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "t3A0Kv",
+                  "name": "Voir sur la carte",
+                  "fill": "$surface2",
+                  "cornerRadius": 999,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#00000066",
+                    "offset": {
+                      "x": 0,
+                      "y": 8
+                    },
+                    "blur": 24
+                  },
+                  "gap": 8,
+                  "padding": [
+                    14,
+                    20
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "a1wBvE",
+                      "name": "MapIcon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "map",
+                      "library": "lucide",
+                      "fill": "$text-primary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "OoKsr",
+                      "name": "FabLabel",
+                      "fill": "$text-primary",
+                      "content": "Voir sur la carte",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "Ti14d",
+      "x": 430,
+      "y": 865,
+      "name": "2 · Résultats",
+      "clip": true,
+      "width": 390,
+      "fill": [
+        "$bg",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "enabled": true,
+          "rotation": 0,
+          "size": {
+            "width": 1.15,
+            "height": 0.5
+          },
+          "colors": [
+            {
+              "color": "$halo",
+              "position": 0
+            },
+            {
+              "color": "$halo-clear",
+              "position": 1
+            }
+          ],
+          "center": {
+            "y": 0
+          }
+        }
+      ],
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "JUvb7",
+          "type": "ref",
+          "ref": "lLNAu",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "rh3br",
+          "name": "Content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            8,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "csyXz",
+              "name": "Search Bar",
+              "width": "fill_container",
+              "fill": "$surface1",
+              "cornerRadius": 999,
+              "gap": 12,
+              "padding": [
+                14,
+                16
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Z67sP",
+                  "name": "Query",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "r9tim5",
+                      "name": "Search Icon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "search",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "NkcPH",
+                      "name": "Query Text",
+                      "fill": "$text-primary",
+                      "content": "couturière",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ORRuK",
+                  "name": "Clear Button",
+                  "width": 48,
+                  "height": 48,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "T68Et",
+                      "name": "Clear Icon",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "x",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RTDw3",
+              "name": "Radius Filters",
+              "width": "fill_container",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "yNLz9",
+                  "name": "Chip 500 m",
+                  "height": 48,
+                  "cornerRadius": 999,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "padding": [
+                    10,
+                    16
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fI0n8",
+                      "name": "Chip Label",
+                      "fill": "$text-secondary",
+                      "content": "500 m",
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "zGbLu",
+                  "name": "Chip 1 km",
+                  "height": 48,
+                  "fill": "$surface2",
+                  "cornerRadius": 999,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "padding": [
+                    10,
+                    16
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "zL9tJ",
+                      "name": "Chip Label",
+                      "fill": "$text-primary",
+                      "content": "1 km",
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Zb5cw",
+                  "name": "Chip 3 km",
+                  "height": 48,
+                  "cornerRadius": 999,
+                  "stroke": "$border",
+                  "strokeWidth": 1,
+                  "padding": [
+                    10,
+                    16
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "XvtAe",
+                      "name": "Chip Label",
+                      "fill": "$text-secondary",
+                      "content": "3 km",
+                      "fontFamily": "$font",
+                      "fontSize": 14,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "hVcOB",
+              "name": "Results List",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "id": "a86hia",
+                  "type": "ref",
+                  "ref": "uc3Ix",
+                  "name": "Card Afiavi",
+                  "width": "fill_container",
+                  "descendants": {
+                    "oPeQP": {
+                      "type": "frame",
+                      "id": "Tv1Zc",
+                      "name": "Photo",
+                      "clip": true,
+                      "width": 96,
+                      "height": 96,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./images/generated-1785748052669.png",
+                        "mode": "fill"
+                      },
+                      "cornerRadius": 20
+                    },
+                    "YHC3q": {
+                      "content": "Atelier Afiavi Couture"
+                    },
+                    "roCyY": {
+                      "content": "Couture et mode · 240 m"
+                    },
+                    "ftpi6": {
+                      "content": "En face de la pharmacie du carrefour, première porte à gauche"
+                    },
+                    "uFdNu": {
+                      "fill": "$fresh-good"
+                    },
+                    "xWxHl": {
+                      "content": "confirmé il y a 5 jours"
+                    }
+                  }
+                },
+                {
+                  "id": "Wopvw",
+                  "type": "ref",
+                  "ref": "uc3Ix",
+                  "name": "Card Assigame",
+                  "width": "fill_container",
+                  "descendants": {
+                    "oPeQP": {
+                      "type": "frame",
+                      "id": "FYHnU",
+                      "name": "Photo",
+                      "clip": true,
+                      "width": 96,
+                      "height": 96,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./images/generated-1785748052861.png",
+                        "mode": "fill"
+                      },
+                      "cornerRadius": 20
+                    },
+                    "YHC3q": {
+                      "content": "Couture Assigamé"
+                    },
+                    "roCyY": {
+                      "content": "Couture et mode · 1,2 km"
+                    },
+                    "ftpi6": {
+                      "content": "Intérieur du Grand Marché, allée des tissus"
+                    },
+                    "uFdNu": {
+                      "fill": "$fresh-good"
+                    },
+                    "xWxHl": {
+                      "content": "confirmé il y a 8 jours"
+                    }
+                  }
+                },
+                {
+                  "id": "JKVnl",
+                  "type": "ref",
+                  "ref": "uc3Ix",
+                  "name": "Card Mama Adjo",
+                  "width": "fill_container",
+                  "descendants": {
+                    "oPeQP": {
+                      "type": "frame",
+                      "id": "Yyfdb",
+                      "name": "Photo",
+                      "clip": true,
+                      "width": 96,
+                      "height": 96,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "./images/generated-1785748053109.png",
+                        "mode": "fill"
+                      },
+                      "cornerRadius": 20
+                    },
+                    "YHC3q": {
+                      "content": "Chez Mama Adjo"
+                    },
+                    "roCyY": {
+                      "content": "Nourriture et boissons · 310 m"
+                    },
+                    "ftpi6": {
+                      "content": "Sous le grand manguier, en face de l'école primaire"
+                    },
+                    "uFdNu": {
+                      "fill": "$fresh-good"
+                    },
+                    "xWxHl": {
+                      "content": "confirmé il y a 2 jours"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "gbyZk",
+      "x": 860,
+      "y": 865,
+      "name": "3 · Carte",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "$bg",
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "V2gZnS",
+          "x": 0,
+          "y": 0,
+          "name": "Map Base",
+          "fill": "$surface1",
+          "width": 390,
+          "height": 844
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 18,
+          "id": "lHO2l",
+          "x": 24,
+          "y": 200,
+          "name": "Block",
+          "fill": "$surface2",
+          "width": 150,
+          "height": 120
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 20,
+          "id": "jnZIU",
+          "x": 212,
+          "y": 180,
+          "name": "Block",
+          "fill": "$surface2",
+          "width": 150,
+          "height": 160
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 16,
+          "id": "XsvmT",
+          "x": 36,
+          "y": 450,
+          "name": "Block",
+          "fill": "$surface2",
+          "width": 124,
+          "height": 130
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 18,
+          "id": "KQhft",
+          "x": 224,
+          "y": 440,
+          "name": "Block",
+          "fill": "$surface2",
+          "width": 136,
+          "height": 120
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 999,
+          "id": "CoGTy",
+          "x": 0,
+          "y": 150,
+          "name": "Street H",
+          "fill": "$border",
+          "width": 390,
+          "height": 7
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 999,
+          "id": "rvQlu",
+          "x": 0,
+          "y": 380,
+          "name": "Street H",
+          "fill": "$border",
+          "width": 390,
+          "height": 7
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 999,
+          "id": "ISTLl",
+          "x": 0,
+          "y": 610,
+          "name": "Street H",
+          "fill": "$border",
+          "width": 390,
+          "height": 7
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 999,
+          "id": "bsFmI",
+          "x": 110,
+          "y": 0,
+          "name": "Street V",
+          "fill": "$border",
+          "width": 7,
+          "height": 844
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 999,
+          "id": "R12QkW",
+          "x": 275,
+          "y": 0,
+          "name": "Street V",
+          "fill": "$border",
+          "width": 7,
+          "height": 844
+        },
+        {
+          "type": "rectangle",
+          "cornerRadius": 999,
+          "id": "PrBGY",
+          "x": 0,
+          "y": 90,
+          "name": "Street Diagonal",
+          "rotation": -33,
+          "fill": "$border",
+          "width": 600,
+          "height": 7
+        },
+        {
+          "type": "frame",
+          "id": "qPDa9",
+          "x": 70,
+          "y": 300,
+          "name": "Cluster 12",
+          "width": 46,
+          "height": 46,
+          "fill": "$surface2",
+          "cornerRadius": 999,
+          "stroke": "$border",
+          "strokeWidth": 1.5,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000059",
+            "offset": {
+              "x": 0,
+              "y": 4
+            },
+            "blur": 14
+          },
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "dxzD1",
+              "name": "Count",
+              "fill": "$text-primary",
+              "content": "12",
+              "fontFamily": "$font",
+              "fontSize": 16,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "pIc1g",
+          "x": 250,
+          "y": 240,
+          "name": "Cluster 8",
+          "width": 46,
+          "height": 46,
+          "fill": "$surface2",
+          "cornerRadius": 999,
+          "stroke": "$border",
+          "strokeWidth": 1.5,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000059",
+            "offset": {
+              "x": 0,
+              "y": 4
+            },
+            "blur": 14
+          },
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "siDMf",
+              "name": "Count",
+              "fill": "$text-primary",
+              "content": "8",
+              "fontFamily": "$font",
+              "fontSize": 16,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ySDKd",
+          "x": 180,
+          "y": 430,
+          "name": "Cluster 5",
+          "width": 46,
+          "height": 46,
+          "fill": "$surface2",
+          "cornerRadius": 999,
+          "stroke": "$border",
+          "strokeWidth": 1.5,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000059",
+            "offset": {
+              "x": 0,
+              "y": 4
+            },
+            "blur": 14
+          },
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "OP5xL",
+              "name": "Count",
+              "fill": "$text-primary",
+              "content": "5",
+              "fontFamily": "$font",
+              "fontSize": 16,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Z2nkq",
+          "x": 150,
+          "y": 540,
+          "name": "Cluster Selected",
+          "width": 58,
+          "height": 58,
+          "fill": "$accent",
+          "cornerRadius": 999,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000059",
+            "offset": {
+              "x": 0,
+              "y": 4
+            },
+            "blur": 14
+          },
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "VhWWT",
+              "name": "Count",
+              "fill": "$on-accent",
+              "content": "3",
+              "fontFamily": "$font",
+              "fontSize": 16,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "id": "bnlhP",
+          "type": "ref",
+          "ref": "lLNAu",
+          "name": "Status Bar",
+          "x": 0,
+          "y": 0,
+          "width": 390
+        },
+        {
+          "type": "frame",
+          "id": "lshXk",
+          "x": 16,
+          "y": 74,
+          "name": "Back Button",
+          "width": 48,
+          "height": 48,
+          "fill": "$surface2",
+          "cornerRadius": 999,
+          "stroke": "$border",
+          "strokeWidth": 1,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000059",
+            "offset": {
+              "x": 0,
+              "y": 4
+            },
+            "blur": 14
+          },
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "k03TxB",
+              "name": "Back Icon",
+              "width": 22,
+              "height": 22,
+              "icon": "arrow-left",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "F2qEi",
+          "x": 326,
+          "y": 560,
+          "name": "Recenter Button",
+          "width": 48,
+          "height": 48,
+          "fill": "$surface2",
+          "cornerRadius": 999,
+          "stroke": "$border",
+          "strokeWidth": 1,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000059",
+            "offset": {
+              "x": 0,
+              "y": 4
+            },
+            "blur": 14
+          },
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "z5kwR7",
+              "name": "Recenter Icon",
+              "width": 22,
+              "height": 22,
+              "icon": "locate-fixed",
+              "library": "lucide",
+              "fill": "$text-primary"
+            }
+          ]
+        },
+        {
+          "id": "OxPli",
+          "type": "ref",
+          "ref": "uc3Ix",
+          "name": "Preview Afiavi",
+          "x": 16,
+          "y": 620,
+          "width": 330,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000066",
+            "offset": {
+              "x": 0,
+              "y": 8
+            },
+            "blur": 24
+          },
+          "descendants": {
+            "oPeQP": {
+              "type": "frame",
+              "id": "JcTlY",
+              "name": "Photo",
+              "clip": true,
+              "width": 96,
+              "height": 96,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1785748327679.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 20
+            },
+            "YHC3q": {
+              "content": "Atelier Afiavi Couture"
+            },
+            "roCyY": {
+              "content": "Couture et mode · 240 m"
+            },
+            "ftpi6": {
+              "content": "En face de la pharmacie du carrefour, première porte à gauche",
+              "textGrowth": "fixed-width"
+            },
+            "uFdNu": {
+              "fill": "$fresh-good"
+            },
+            "xWxHl": {
+              "content": "confirmé il y a 5 jours"
+            }
+          }
+        },
+        {
+          "id": "AqMVF",
+          "type": "ref",
+          "ref": "uc3Ix",
+          "name": "Preview Mama Adjo",
+          "x": 360,
+          "y": 620,
+          "width": 330,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000066",
+            "offset": {
+              "x": 0,
+              "y": 8
+            },
+            "blur": 24
+          },
+          "descendants": {
+            "oPeQP": {
+              "type": "frame",
+              "id": "ZGCab",
+              "name": "Photo",
+              "clip": true,
+              "width": 96,
+              "height": 96,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "./images/generated-1785748328518.png",
+                "mode": "fill"
+              },
+              "cornerRadius": 20
+            },
+            "YHC3q": {
+              "content": "Chez Mama Adjo"
+            },
+            "roCyY": {
+              "content": "Nourriture et boissons · 310 m"
+            },
+            "ftpi6": {
+              "content": "Sous le grand manguier, en face de l'école primaire",
+              "textGrowth": "fixed-width"
+            },
+            "uFdNu": {
+              "fill": "$fresh-good"
+            },
+            "xWxHl": {
+              "content": "confirmé il y a 2 jours"
+            }
+          }
+        },
+        {
+          "type": "frame",
+          "id": "K9vn9",
+          "x": 159,
+          "y": 812,
+          "name": "Pagination",
+          "gap": 6,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "ellipse",
+              "id": "QwYQ2",
+              "name": "Dot Active",
+              "fill": "$accent-soft",
+              "width": 7,
+              "height": 7
+            },
+            {
+              "type": "ellipse",
+              "id": "oOL9r",
+              "name": "Dot",
+              "fill": "$border",
+              "width": 7,
+              "height": 7
+            },
+            {
+              "type": "ellipse",
+              "id": "oDzyX",
+              "name": "Dot",
+              "fill": "$border",
+              "width": 7,
+              "height": 7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "J8z2J1",
+      "x": 1290,
+      "y": 865,
+      "name": "4 · Fiche commerçant",
+      "clip": true,
+      "width": 390,
+      "fill": [
+        "$bg",
+        {
+          "type": "gradient",
+          "gradientType": "radial",
+          "enabled": true,
+          "rotation": 0,
+          "size": {
+            "width": 1.15,
+            "height": 0.5
+          },
+          "colors": [
+            {
+              "color": "$halo",
+              "position": 0
+            },
+            {
+              "color": "$halo-clear",
+              "position": 1
+            }
+          ],
+          "center": {
+            "y": 0
+          }
+        }
+      ],
+      "layout": "vertical",
+      "children": [
+        {
+          "id": "CCFRC",
+          "type": "ref",
+          "ref": "lLNAu",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "AR89i",
+          "name": "Hero",
+          "clip": true,
+          "width": "fill_container",
+          "height": 300,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "./images/generated-1785748161635.png",
+            "mode": "fill"
+          },
+          "layout": "none",
+          "children": [
+            {
+              "type": "rectangle",
+              "id": "NDOs6",
+              "x": 0,
+              "y": 150,
+              "name": "Fade",
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": 0,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#14100E",
+                    "position": 0
+                  },
+                  {
+                    "color": "#14100E00",
+                    "position": 1
+                  }
+                ]
+              },
+              "width": 390,
+              "height": 150
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "PEiPk",
+          "name": "Body",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": [
+            20,
+            16
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "fnhOn",
+              "name": "Name",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Atelier Afiavi Couture",
+              "lineHeight": 1.05,
+              "fontFamily": "$font",
+              "fontSize": 34,
+              "fontWeight": "700",
+              "letterSpacing": -1
+            },
+            {
+              "type": "text",
+              "id": "LBbhU",
+              "name": "Meta",
+              "fill": "$text-secondary",
+              "content": "Couture et mode · 240 m",
+              "fontFamily": "$font",
+              "fontSize": 16,
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "dPrkc",
+              "name": "Repère",
+              "width": "fill_container",
+              "fill": "$surface1",
+              "cornerRadius": 20,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#00000047",
+                "offset": {
+                  "x": 0,
+                  "y": 6
+                },
+                "blur": 20
+              },
+              "gap": 12,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "h7bJEX",
+                  "name": "BaliseWrap",
+                  "width": 40,
+                  "height": 40,
+                  "fill": "$surface2",
+                  "cornerRadius": 999,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "CWKE7",
+                      "name": "Balise",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "map-pin",
+                      "library": "lucide",
+                      "fill": "$accent-soft"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VHX2l",
+                  "name": "RepText",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 4,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "t0u07N",
+                      "name": "RepLabel",
+                      "fill": "$text-secondary",
+                      "content": "POINT DE REPÈRE",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "500",
+                      "letterSpacing": 0.8
+                    },
+                    {
+                      "type": "text",
+                      "id": "NTr2b",
+                      "name": "RepValue",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "En face de la pharmacie du carrefour, première porte à gauche",
+                      "lineHeight": 1.3,
+                      "fontFamily": "$font",
+                      "fontSize": 17,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Pp0DJ",
+              "name": "Tiles",
+              "width": "fill_container",
+              "height": 88,
+              "gap": 12,
+              "children": [
+                {
+                  "id": "p7UCe6",
+                  "type": "ref",
+                  "ref": "qAgKq",
+                  "name": "Tile Confirmé",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "gM0is": {
+                      "content": "CONFIRMÉ"
+                    },
+                    "csYB2": {
+                      "content": "il y a 5 jours",
+                      "fontSize": 18
+                    }
+                  }
+                },
+                {
+                  "id": "jI977",
+                  "type": "ref",
+                  "ref": "qAgKq",
+                  "name": "Tile Distance",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "descendants": {
+                    "gM0is": {
+                      "content": "DISTANCE"
+                    },
+                    "csYB2": {
+                      "content": "240 m"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "P0PtE",
+              "name": "Horaires",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "IauPq",
+                  "name": "HorHead",
+                  "gap": 8,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "lNjoX",
+                      "name": "Clock",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "info",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Ksaio",
+                      "name": "HorLabel",
+                      "fill": "$text-secondary",
+                      "content": "HORAIRES INDICATIFS",
+                      "fontFamily": "$font",
+                      "fontSize": 13,
+                      "fontWeight": "500",
+                      "letterSpacing": 0.8
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cH1VN",
+                  "name": "HorRows",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "qpeLO",
+                      "name": "Lundi – Samedi",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "k78Ho",
+                          "name": "Day",
+                          "fill": "$text-primary",
+                          "content": "Lundi – Samedi",
+                          "fontFamily": "$font",
+                          "fontSize": 16
+                        },
+                        {
+                          "type": "text",
+                          "id": "KtyTc",
+                          "name": "Time",
+                          "fill": "$text-secondary",
+                          "content": "8h00 – 19h00",
+                          "fontFamily": "$font",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "gXpFl",
+                      "name": "Dimanche",
+                      "width": "fill_container",
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "u3sKhH",
+                          "name": "Day",
+                          "fill": "$text-primary",
+                          "content": "Dimanche",
+                          "fontFamily": "$font",
+                          "fontSize": 16
+                        },
+                        {
+                          "type": "text",
+                          "id": "zQwrm",
+                          "name": "Time",
+                          "fill": "$text-secondary",
+                          "content": "Fermé",
+                          "fontFamily": "$font",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "mqwzY",
+                  "name": "HorNote",
+                  "fill": "$text-secondary",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Donnés à titre indicatif — pensez à confirmer sur WhatsApp.",
+                  "lineHeight": 1.3,
+                  "fontFamily": "$font",
+                  "fontSize": 13
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "w7Sgap",
+          "name": "Actions",
+          "width": "fill_container",
+          "fill": "$bg",
+          "stroke": "$border",
+          "strokeWidth": {
+            "top": 1
+          },
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            16,
+            16,
+            24,
+            16
+          ],
+          "children": [
+            {
+              "id": "X03oj",
+              "type": "ref",
+              "ref": "g6bfz",
+              "name": "WhatsApp",
+              "width": "fill_container"
+            },
+            {
+              "id": "QqvoT",
+              "type": "ref",
+              "ref": "lRMck",
+              "name": "Itinéraire",
+              "width": "fill_container"
+            },
+            {
+              "type": "frame",
+              "id": "THAjC",
+              "name": "ReportWrap",
+              "width": "fill_container",
+              "padding": [
+                16,
+                0
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "eZBpk",
+                  "name": "ReportLink",
+                  "fill": "$text-secondary",
+                  "content": "Signaler un problème",
+                  "fontFamily": "$font",
+                  "fontSize": 14,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "MLwX4",
+      "x": 1720,
+      "y": 865,
+      "name": "5 · Signalement",
+      "clip": true,
+      "width": 390,
+      "height": 844,
+      "fill": "#0A0705",
+      "layout": "vertical",
+      "justifyContent": "space_between",
+      "children": [
+        {
+          "id": "b07fu",
+          "type": "ref",
+          "ref": "lLNAu",
+          "name": "Status Bar",
+          "width": "fill_container"
+        },
+        {
+          "type": "frame",
+          "id": "AI20J",
+          "name": "Sheet",
+          "width": "fill_container",
+          "fill": "$surface1",
+          "cornerRadius": [
+            28,
+            28,
+            0,
+            0
+          ],
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000073",
+            "offset": {
+              "x": 0,
+              "y": -8
+            },
+            "blur": 32
+          },
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            12,
+            16,
+            28,
+            16
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "HFPUG",
+              "name": "HandleWrap",
+              "width": "fill_container",
+              "padding": [
+                0,
+                0,
+                4,
+                0
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 999,
+                  "id": "rzLBL",
+                  "name": "Handle",
+                  "fill": "$border",
+                  "width": 40,
+                  "height": 4
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "g6J9t",
+              "name": "Title",
+              "fill": "$text-primary",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "Cette information est-elle fausse ?",
+              "lineHeight": 1.2,
+              "fontFamily": "$font",
+              "fontSize": 22,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "LZYrn",
+              "name": "Options",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "A9ER8K",
+                  "name": "C'est fermé",
+                  "width": "fill_container",
+                  "fill": "$surface2",
+                  "cornerRadius": 20,
+                  "gap": 12,
+                  "padding": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "atKAl",
+                      "name": "IconWrap",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "$surface1",
+                      "cornerRadius": 999,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "ocpLs",
+                          "name": "Icon",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "door-closed",
+                          "library": "lucide",
+                          "fill": "$accent-soft"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "oo634",
+                      "name": "Label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "C'est fermé",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "QtCV9",
+                      "name": "Chevron",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "S1GA4d",
+                  "name": "A déménagé",
+                  "width": "fill_container",
+                  "fill": "$surface2",
+                  "cornerRadius": 20,
+                  "gap": 12,
+                  "padding": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "N4MIY",
+                      "name": "IconWrap",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "$surface1",
+                      "cornerRadius": 999,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "tcnmf",
+                          "name": "Icon",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "map-pin-off",
+                          "library": "lucide",
+                          "fill": "$accent-soft"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "LiZO6",
+                      "name": "Label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "A déménagé",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "u91l7p",
+                      "name": "Chevron",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "dh3jN",
+                  "name": "Les informations sont fausses",
+                  "width": "fill_container",
+                  "fill": "$surface2",
+                  "cornerRadius": 20,
+                  "gap": 12,
+                  "padding": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Czwgi",
+                      "name": "IconWrap",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "$surface1",
+                      "cornerRadius": 999,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "J33H2d",
+                          "name": "Icon",
+                          "width": 20,
+                          "height": 20,
+                          "icon": "triangle-alert",
+                          "library": "lucide",
+                          "fill": "$accent-soft"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "u0kP3r",
+                      "name": "Label",
+                      "fill": "$text-primary",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Les informations sont fausses",
+                      "fontFamily": "$font",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "y2L7jy",
+                      "name": "Chevron",
+                      "width": 20,
+                      "height": 20,
+                      "icon": "chevron-right",
+                      "library": "lucide",
+                      "fill": "$text-secondary"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "FB8tI",
+              "name": "Comment",
+              "width": "fill_container",
+              "cornerRadius": 16,
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "padding": [
+                14,
+                16
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "gWjxP",
+                  "name": "CommentLabel",
+                  "fill": "$text-secondary",
+                  "content": "Ajouter un commentaire (facultatif)",
+                  "fontFamily": "$font",
+                  "fontSize": 14
+                },
+                {
+                  "type": "icon",
+                  "id": "QMxQT",
+                  "name": "CommentChevron",
+                  "width": 20,
+                  "height": 20,
+                  "icon": "chevron-down",
+                  "library": "lucide",
+                  "fill": "$text-secondary"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "bg": {
+      "type": "color",
+      "value": "#14100E"
+    },
+    "surface1": {
+      "type": "color",
+      "value": "#1F1917"
+    },
+    "surface2": {
+      "type": "color",
+      "value": "#2A2320"
+    },
+    "border": {
+      "type": "color",
+      "value": "#3A312C"
+    },
+    "accent": {
+      "type": "color",
+      "value": "#FF6B2C"
+    },
+    "accent-soft": {
+      "type": "color",
+      "value": "#FFB088"
+    },
+    "text-primary": {
+      "type": "color",
+      "value": "#F5EFEA"
+    },
+    "text-secondary": {
+      "type": "color",
+      "value": "#C2B4AA"
+    },
+    "fresh-good": {
+      "type": "color",
+      "value": "#6FCF97"
+    },
+    "fresh-check": {
+      "type": "color",
+      "value": "#E2B93B"
+    },
+    "on-accent": {
+      "type": "color",
+      "value": "#14100E"
+    },
+    "halo": {
+      "type": "color",
+      "value": "#FF6B2C2E"
+    },
+    "halo-clear": {
+      "type": "color",
+      "value": "#FF6B2C00"
+    },
+    "text-display": {
+      "type": "number",
+      "value": 34
+    },
+    "text-title": {
+      "type": "number",
+      "value": 22
+    },
+    "text-body": {
+      "type": "number",
+      "value": 16
+    },
+    "text-label": {
+      "type": "number",
+      "value": 13
+    },
+    "text-tile": {
+      "type": "number",
+      "value": 26
+    },
+    "text-landmark": {
+      "type": "number",
+      "value": 14
+    },
+    "space-8": {
+      "type": "number",
+      "value": 8
+    },
+    "space-12": {
+      "type": "number",
+      "value": 12
+    },
+    "space-16": {
+      "type": "number",
+      "value": 16
+    },
+    "space-24": {
+      "type": "number",
+      "value": 24
+    },
+    "space-32": {
+      "type": "number",
+      "value": 32
+    },
+    "radius-card": {
+      "type": "number",
+      "value": 28
+    },
+    "radius-tile": {
+      "type": "number",
+      "value": 20
+    },
+    "radius-pill": {
+      "type": "number",
+      "value": 999
+    },
+    "font": {
+      "type": "string",
+      "value": "Sora"
+    }
+  },
+  "fileToken": "bfdecb22-97c4-4321-9688-d1798874e83c"
+}
