@@ -125,11 +125,59 @@ l'utilisateur une statistique qui ne lui sert pas.
 
 ---
 
+## Écrans
+
+| Route | Écran du `.pen` |
+| --- | --- |
+| `/` | 1 · Accueil |
+| `/resultats` | 2 · Résultats, 9 · Aucun résultat, 6 · Hors ligne, 7 · Erreur |
+| `/carte` | 3 · Carte |
+| `/fiche/[id]` | 4 · Fiche commerçant, 8 · Introuvable |
+| `/signalement/[id]` | 5 · Signalement (feuille modale) |
+| `/aide` | 10 · Aide & légal |
+| `/+not-found` | 8 · Introuvable |
+
+Les écrans 6 à 9 du `.pen` ne sont pas des routes mais des **états** : le
+design les dessine séparément pour les documenter, l'application les rend là où
+ils se produisent. Un écran « hors ligne » atteignable par navigation n'aurait
+aucun sens.
+
+Règle appliquée partout : **dès qu'il existe une donnée en cache, même
+ancienne, on l'affiche plutôt qu'un état d'erreur.** Une liste d'hier vaut mieux
+qu'un écran vide. L'état plein écran n'apparaît que lorsqu'il n'y a
+strictement rien à montrer.
+
+### Points de fidélité au design
+
+- La police Sora est chargée en quatre graisses et nommée explicitement partout :
+  React Native ne synthétise pas les graisses d'une police personnalisée,
+  `fontWeight` seul laisserait tout en Regular.
+- Le halo orange est rendu en SVG, en dégradé **radial**. L'approximer par un
+  dégradé linéaire aurait changé l'ambiance de façon visible.
+- Aucun flou d'arrière-plan nulle part : la profondeur passe par des surfaces
+  opaques successives.
+- Les listes utilisent `FlatList` avec `removeClippedSubviews` et de petits
+  lots de rendu — au-delà d'une vingtaine de cartes, un `ScrollView` saccade sur
+  un Android d'entrée de gamme.
+
 ## État d'avancement
 
-Fait : couche de données complète, thème issu du `.pen`, navigation
-`expo-router`, écran d'accueil branché sur l'API réelle.
+Fait : couche de données, thème issu du `.pen`, navigation, et les sept écrans
+ci-dessus branchés sur l'API réelle.
 
-Reste à faire : les dix autres écrans du `.pen` (résultats, carte, fiche,
-signalement, hors ligne, erreur, introuvable, aucun résultat, aide, mentions
-légales), l'extraction des sept composants réutilisables, et la police Sora.
+Écarts assumés par rapport au `.pen`, à trancher :
+
+- **Le fond cartographique de `/carte` n'est pas rendu.** Le choix du
+  fournisseur de tuiles a une conséquence financière durable — une facturation
+  au chargement de carte, sur un produit dont le revenu par marchand se compte
+  en centaines de francs, doit être choisie et pas subie. En attendant, les
+  points sont à leur position réelle les uns par rapport aux autres, projetés
+  autour de l'utilisateur : une vue relative exacte, sans le décor. Le seul
+  point de remplacement est le composant `SurfaceCarte`.
+- **Le bouton favori de la fiche n'est pas implémenté** : il n'a pas de
+  contrepartie côté backend. Plutôt qu'un cœur qui ne mémorise rien, il est
+  absent.
+- **Le tri des résultats n'est pas exposé.** Le backend ordonne par fraîcheur
+  puis distance ; un sélecteur sans effet réel serait un contrôle mort.
+- L'icône WhatsApp du `.pen` vient de Phosphor ; Lucide n'a pas d'icône de
+  marque, `MessageCircle` la remplace.

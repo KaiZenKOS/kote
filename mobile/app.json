@@ -31,7 +31,9 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Koté utilise votre position uniquement pour afficher les commerces proches de vous. Elle n'est jamais enregistrée avec précision."
         }
-      ]
+      ],
+      "expo-font",
+      "expo-splash-screen"
     ]
   }
 }

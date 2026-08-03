@@ -54,6 +54,20 @@ export const typo = {
   libelle: 13,
 } as const;
 
+/**
+ * Familles de police.
+ *
+ * React Native ne synthetise pas les graisses d'une police personnalisee :
+ * `fontWeight` reste sans effet et tout s'affiche en Regular. Chaque graisse
+ * doit donc etre nommee explicitement.
+ */
+export const police = {
+  normal: "Sora_400Regular",
+  moyen: "Sora_500Medium",
+  demi: "Sora_600SemiBold",
+  gras: "Sora_700Bold",
+} as const;
+
 /** Cible tactile minimale. Aucun element interactif ne descend en dessous. */
 export const CIBLE_TACTILE_MIN = 48;
 

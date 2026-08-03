@@ -10,252 +10,323 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+// `Map` est renomme : l'import masquerait le constructeur Map de JavaScript,
+// utilise plus bas pour indexer les comptages.
+import {
+  Map as IconeCarte,
+  MapPin,
+  RefreshCw,
+  Search,
+  WifiOff,
+} from "lucide-react-native";
 
+import { Ecran } from "../src/composants/Ecran";
+import { EtatPleinEcran, TitreSection } from "../src/composants/communs";
+import { CarteCommerce, PuceCategorie } from "../src/composants/cartes";
 import { useCategories, useComptages } from "../src/hooks/useCategories";
-import { useRecherche } from "../src/hooks/useRecherche";
 import { usePrechargementFiche } from "../src/hooks/useFiche";
+import { useLibellesCategories } from "../src/hooks/useLibelles";
+import { useRecherche } from "../src/hooks/useRecherche";
 import { CENTRE_LOME, usePosition } from "../src/hooks/usePosition";
-import { urlPhoto } from "../src/api/marchands";
-import { couleurs, espaces, rayons, typo } from "../src/theme/tokens";
-import type { ResultatRecherche } from "../src/api/types";
+import { couleurs, espaces, police, rayons, typo } from "../src/theme/tokens";
 
-const RAYON_DEFAUT_M = 1000;
+const RAYON_ACCUEIL_M = 1000;
+
+function salutation(): string {
+  const heure = new Date().getHours();
+  if (heure < 12) return "Bonjour";
+  if (heure < 18) return "Bon après-midi";
+  return "Bonsoir";
+}
 
 export default function Accueil() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const etatPosition = usePosition();
-  const [requete, setRequete] = useState("");
+  const [saisie, setSaisie] = useState("");
 
-  const position = useMemo(
-    () => (etatPosition.statut === "prete" ? etatPosition.position : CENTRE_LOME),
-    [etatPosition],
-  );
+  const positionConnue =
+    etatPosition.statut === "prete" ? etatPosition.position : null;
+  const position = positionConnue ?? CENTRE_LOME;
 
   const categories = useCategories();
-  const comptages = useComptages(position, RAYON_DEFAUT_M);
-  const proches = useRecherche({ position, rayonM: RAYON_DEFAUT_M, limite: 3 });
+  const comptages = useComptages(position, RAYON_ACCUEIL_M);
+  const proches = useRecherche({
+    position,
+    rayonM: RAYON_ACCUEIL_M,
+    limite: 3,
+  });
+  const libelles = useLibellesCategories();
   const precharger = usePrechargementFiche();
 
-  const pastilles = useMemo(() => {
+  const puces = useMemo(() => {
     const parSlug = new Map(
       (comptages.data ?? []).map((c) => [c.categorie_slug, c.nombre]),
     );
     return (categories.data ?? []).map((c) => ({
       slug: c.slug,
       libelle: c.libelle_fr,
+      icone: c.icone,
       nombre: parSlug.get(c.slug) ?? 0,
     }));
   }, [categories.data, comptages.data]);
 
-  return (
-    <ScrollView
-      style={styles.ecran}
-      contentContainerStyle={[
-        styles.contenu,
-        { paddingTop: insets.top + espaces.xs, paddingBottom: insets.bottom + espaces.xl },
-      ]}
-      keyboardShouldPersistTaps="handled"
-    >
-      <View style={styles.entete}>
-        <Text style={styles.marque}>Koté</Text>
-        <Text style={styles.salutation}>Bonjour</Text>
-      </View>
+  const rangees = useMemo(() => {
+    const paquets: (typeof puces)[] = [];
+    for (let i = 0; i < puces.length; i += 3) paquets.push(puces.slice(i, i + 3));
+    return paquets;
+  }, [puces]);
 
-      <TextInput
-        style={styles.recherche}
-        placeholder="Que cherchez-vous ? Couturière, mécanicien..."
-        placeholderTextColor={couleurs.texteSecondaire}
-        value={requete}
-        onChangeText={setRequete}
-        returnKeyType="search"
-        onSubmitEditing={() =>
-          router.push({ pathname: "/resultats", params: { q: requete } })
-        }
-      />
+  const lancerRecherche = () => {
+    const q = saisie.trim();
+    if (!q) return;
+    router.push({ pathname: "/resultats", params: { q } });
+  };
 
-      <Text style={styles.section}>Catégories</Text>
-      {categories.isPending ? (
-        <ActivityIndicator color={couleurs.accent} />
-      ) : (
-        <View style={styles.grille}>
-          {pastilles.map((p) => (
-            <Pressable
-              key={p.slug}
-              style={styles.puce}
-              onPress={() =>
-                router.push({
-                  pathname: "/resultats",
-                  params: { categorie: p.slug },
-                })
-              }
-            >
-              <Text style={styles.puceLibelle}>{p.libelle}</Text>
-              <Text style={styles.puceCompte}>
-                {p.nombre} {p.nombre > 1 ? "ouverts" : "ouvert"}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      )}
-
-      <Text style={styles.section}>Près de vous</Text>
-      {proches.isPending ? (
-        <ActivityIndicator color={couleurs.accent} />
-      ) : (
-        (proches.data ?? []).map((m) => (
-          <CarteCommerce
-            key={m.id}
-            marchand={m}
-            onVisible={() => precharger(m.id)}
-            onPress={() => router.push(`/fiche/${m.id}`)}
+  /**
+   * Aucune donnee et aucune connexion : c'est le seul cas ou l'on bloque
+   * l'ecran. Des qu'il existe un cache, meme ancien, on prefere l'afficher --
+   * une liste d'hier vaut mieux qu'un ecran vide.
+   */
+  if (categories.isError && !categories.data) {
+    return (
+      <Ecran>
+        <View style={{ paddingTop: insets.top, flex: 1 }}>
+          <EtatPleinEcran
+            Icone={WifiOff}
+            titre="Pas de connexion"
+            message="Vérifiez votre connexion. Koté se charge avec très peu de données — il suffit d'un petit signal pour retrouver les commerces autour de vous."
+            action={{
+              libelle: "Réessayer",
+              Icone: RefreshCw,
+              onPress: () => void categories.refetch(),
+            }}
           />
-        ))
-      )}
-    </ScrollView>
-  );
-}
-
-function CarteCommerce({
-  marchand,
-  onPress,
-  onVisible,
-}: {
-  marchand: ResultatRecherche;
-  onPress: () => void;
-  onVisible: () => void;
-}) {
-  const fraiche = marchand.jours_depuis_confirmation <= 90;
+        </View>
+      </Ecran>
+    );
+  }
 
   return (
-    <Pressable style={styles.carte} onPress={onPress} onLayout={onVisible}>
-      <View style={styles.photo}>
-        {urlPhoto(marchand.photo_principale) ? null : (
-          <Text style={styles.photoVide}>—</Text>
-        )}
-      </View>
-      <View style={styles.carteCorps}>
-        <Text style={styles.carteNom} numberOfLines={1}>
-          {marchand.nom_enseigne}
-        </Text>
-        <Text style={styles.carteMeta}>
-          {marchand.categorie_slug} · {formaterDistance(marchand.distance_m)}
-        </Text>
-        <Text style={styles.carteRepere} numberOfLines={2}>
-          {marchand.repere}
-        </Text>
-        <View style={styles.pastille}>
-          <View
-            style={[
-              styles.point,
-              {
-                backgroundColor: fraiche
-                  ? couleurs.fraicheurBonne
-                  : couleurs.fraicheurAVerifier,
-              },
-            ]}
-          />
-          <Text style={styles.pastilleTexte}>
-            {fraiche
-              ? `confirmé il y a ${marchand.jours_depuis_confirmation} jours`
-              : "à confirmer"}
-          </Text>
+    <Ecran>
+      <ScrollView
+        contentContainerStyle={[
+          styles.contenu,
+          {
+            paddingTop: insets.top + espaces.xs,
+            paddingBottom: insets.bottom + espaces.lg,
+          },
+        ]}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.entete}>
+          <View style={styles.marqueBloc}>
+            <Text style={styles.marque}>Koté</Text>
+            <Text style={styles.salutation}>{salutation()}</Text>
+          </View>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Aide et informations"
+            style={styles.avatar}
+            onPress={() => router.push("/aide")}
+          >
+            <Text style={styles.avatarTexte}>?</Text>
+          </Pressable>
         </View>
-      </View>
-    </Pressable>
-  );
-}
 
-function formaterDistance(metres: number): string {
-  return metres < 1000 ? `${metres} m` : `${(metres / 1000).toFixed(1)} km`;
+        <View style={styles.localisation}>
+          <View style={styles.localisationGauche}>
+            <MapPin size={16} color={couleurs.accentDoux} />
+            <Text style={styles.localisationTexte} numberOfLines={1}>
+              {positionConnue
+                ? "Autour de vous"
+                : "Position approximative · Lomé"}
+            </Text>
+          </View>
+          <Pressable onPress={etatPosition.rafraichir} hitSlop={12}>
+            <Text style={styles.lien}>Changer</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.recherche}>
+          <Search size={22} color={couleurs.texteSecondaire} />
+          <TextInput
+            style={styles.rechercheChamp}
+            placeholder="Que cherchez-vous ? Couturière, mécanicien…"
+            placeholderTextColor={couleurs.texteSecondaire}
+            value={saisie}
+            onChangeText={setSaisie}
+            returnKeyType="search"
+            onSubmitEditing={lancerRecherche}
+          />
+        </View>
+
+        <View style={styles.bloc}>
+          <Text style={styles.etiquette}>CATÉGORIES</Text>
+          {categories.isPending ? (
+            <ActivityIndicator color={couleurs.accent} />
+          ) : (
+            rangees.map((rangee, index) => (
+              <View key={index} style={styles.rangee}>
+                {rangee.map((p) => (
+                  <PuceCategorie
+                    key={p.slug}
+                    libelle={p.libelle}
+                    identifiantIcone={p.icone}
+                    nombre={p.nombre}
+                    onPress={() =>
+                      router.push({
+                        pathname: "/resultats",
+                        params: { categorie: p.slug },
+                      })
+                    }
+                  />
+                ))}
+              </View>
+            ))
+          )}
+        </View>
+
+        <View style={styles.bloc}>
+          <TitreSection
+            action={{
+              libelle: "Tout voir",
+              onPress: () => router.push("/resultats"),
+            }}
+          >
+            Près de vous
+          </TitreSection>
+
+          {proches.isPending ? (
+            <ActivityIndicator color={couleurs.accent} />
+          ) : (
+            (proches.data ?? []).map((m) => (
+              <CarteCommerce
+                key={m.id}
+                marchand={m}
+                libelleCategorie={libelles.get(m.categorie_slug)}
+                onApparait={() => precharger(m.id)}
+                onPress={() => router.push(`/fiche/${m.id}`)}
+              />
+            ))
+          )}
+        </View>
+
+        <View style={styles.pied}>
+          <Pressable
+            accessibilityRole="button"
+            style={styles.fab}
+            onPress={() => router.push("/carte")}
+          >
+            <IconeCarte size={20} color={couleurs.textePrincipal} />
+            <Text style={styles.fabTexte}>Voir sur la carte</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </Ecran>
+  );
 }
 
 const styles = StyleSheet.create({
-  ecran: { flex: 1, backgroundColor: couleurs.bg },
   contenu: { paddingHorizontal: espaces.md, gap: espaces.lg },
 
-  entete: { flexDirection: "row", alignItems: "baseline", gap: espaces.sm },
-  marque: {
-    color: couleurs.accent,
-    fontSize: typo.libelle,
-    fontWeight: "600",
-    letterSpacing: 1,
+  entete: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  salutation: { color: couleurs.texteSecondaire, fontSize: typo.corps },
+  marqueBloc: { gap: 2 },
+  marque: {
+    color: couleurs.accentDoux,
+    fontSize: typo.libelle,
+    fontFamily: police.gras,
+    letterSpacing: 0.5,
+  },
+  salutation: {
+    color: couleurs.textePrincipal,
+    fontSize: typo.titre,
+    fontFamily: police.demi,
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: rayons.pastille,
+    backgroundColor: couleurs.surface2,
+    borderWidth: 1,
+    borderColor: couleurs.bordure,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarTexte: {
+    color: couleurs.textePrincipal,
+    fontSize: 18,
+    fontFamily: police.demi,
+  },
+
+  localisation: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: espaces.xs,
+  },
+  localisationGauche: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    flexShrink: 1,
+  },
+  localisationTexte: {
+    color: couleurs.texteSecondaire,
+    fontSize: typo.repere,
+    fontFamily: police.moyen,
+  },
+  lien: {
+    color: couleurs.accentDoux,
+    fontSize: typo.repere,
+    fontFamily: police.demi,
+  },
 
   recherche: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: espaces.sm,
     minHeight: 56,
     backgroundColor: couleurs.surface1,
     borderRadius: rayons.pastille,
-    paddingHorizontal: espaces.lg,
+    paddingHorizontal: 20,
+  },
+  rechercheChamp: {
+    flex: 1,
     color: couleurs.textePrincipal,
     fontSize: typo.corps,
+    fontFamily: police.normal,
   },
 
-  section: {
-    color: couleurs.textePrincipal,
-    fontSize: typo.titre,
-    fontWeight: "700",
-  },
-
-  grille: { flexDirection: "row", flexWrap: "wrap", gap: espaces.sm },
-  puce: {
-    minWidth: 112,
-    minHeight: 88,
-    flexGrow: 1,
-    flexBasis: "30%",
-    backgroundColor: couleurs.surface1,
-    borderRadius: rayons.tuile,
-    padding: espaces.md,
-    gap: espaces.xs,
-    justifyContent: "center",
-  },
-  puceLibelle: {
-    color: couleurs.textePrincipal,
-    fontSize: typo.libelle,
-    fontWeight: "600",
-  },
-  puceCompte: { color: couleurs.texteSecondaire, fontSize: typo.libelle },
-
-  carte: {
-    flexDirection: "row",
-    gap: espaces.sm,
-    backgroundColor: couleurs.surface1,
-    borderRadius: rayons.carte,
-    padding: espaces.sm,
-  },
-  photo: {
-    width: 96,
-    height: 96,
-    borderRadius: rayons.tuile,
-    backgroundColor: couleurs.surface2,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  photoVide: { color: couleurs.texteSecondaire, fontSize: typo.titre },
-  carteCorps: { flex: 1, gap: 6, justifyContent: "center" },
-  carteNom: {
-    color: couleurs.textePrincipal,
-    fontSize: typo.corps,
-    fontWeight: "700",
-  },
-  carteMeta: { color: couleurs.texteSecondaire, fontSize: typo.libelle },
-  carteRepere: {
+  bloc: { gap: espaces.sm },
+  etiquette: {
     color: couleurs.texteSecondaire,
-    fontSize: typo.repere,
-    lineHeight: 19,
+    fontSize: typo.libelle,
+    fontFamily: police.moyen,
+    letterSpacing: 0.8,
   },
+  rangee: { flexDirection: "row", gap: espaces.sm },
 
-  pastille: {
+  pied: { alignItems: "center", paddingTop: espaces.xs },
+  fab: {
     flexDirection: "row",
     alignItems: "center",
     gap: espaces.xs,
-    alignSelf: "flex-start",
-    backgroundColor: couleurs.surface2,
+    minHeight: 52,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
     borderRadius: rayons.pastille,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
+    backgroundColor: couleurs.surface2,
+    borderWidth: 1,
+    borderColor: couleurs.bordure,
   },
-  point: { width: 8, height: 8, borderRadius: 4 },
-  pastilleTexte: { color: couleurs.texteSecondaire, fontSize: typo.libelle },
+  fabTexte: {
+    color: couleurs.textePrincipal,
+    fontSize: typo.corps,
+    fontFamily: police.demi,
+  },
 });
