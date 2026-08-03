@@ -1,7 +1,12 @@
-# Projet Marché Togo — backend
+# Koté — backend
 
 Backend d'une plateforme de visibilité des commerçants et artisans au Togo.
+**Koté** — « juste à côté » : la promesse tient dans le nom, le service est à
+côté de chez vous. Le nom ne désigne aucun métier, ce qui préserve l'étendue de
+l'offre côté client, et ne porte aucune connotation administrative ni fiscale.
+
 Le cahier des charges fait foi : [docs/cahier-des-charges.md](docs/cahier-des-charges.md).
+Le prompt de maquette : [docs/prompt-pencil.md](docs/prompt-pencil.md).
 
 Ce dépôt ne contient que le backend. L'interface viendra ensuite, sur la base
 d'une API déjà stable et interrogeable.

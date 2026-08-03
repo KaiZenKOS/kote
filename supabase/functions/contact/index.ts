@@ -85,9 +85,11 @@ Deno.serve(async (requete) => {
   if (erreurJournal) console.error("journal contact", erreurJournal.message);
 
   const numero = fiche.telephone_whatsapp.replace(/^\+/, "");
+  // Phrase la plus lue du produit : c'est par elle que chaque marchand
+  // decouvre la plateforme. Elle est courte, polie et accentuee correctement.
   const message =
-    `Bonjour, je vous ai trouve sur ${NOM_APPLICATION}. ` +
-    `Etes-vous disponible ?`;
+    `Bonjour, je vous ai trouvé sur ${NOM_APPLICATION}. ` +
+    `Êtes-vous disponible ?`;
 
   return json({
     nom_enseigne: fiche.nom_enseigne,

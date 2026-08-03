@@ -1,7 +1,8 @@
 # Cahier des charges — Plateforme de visibilité des commerçants et artisans (Togo)
 
-Nom de code du projet : **Projet Marché Togo** (nom commercial non arbitré, voir section 12).
-Version : 0.1 — 2026-08-02
+Nom de code du dépôt : **Projet Marché Togo**.
+Nom commercial retenu : **Koté** — « juste à côté ». Arbitré le 2026-08-03, voir section 14.
+Version : 0.2 — 2026-08-03
 Statut : document de cadrage, à valider avant tout développement.
 
 > Avertissement sur les chiffres : les données de contexte ci-dessous sont des ordres de
@@ -507,8 +508,14 @@ La phase 0 peut invalider le projet pour un coût quasi nul. C'est sa fonction.
 
 ## 14. Décisions à arbitrer avant le développement
 
-1. **Nom commercial et positionnement de marque.** Il ne doit contenir aucune référence
-   à la formalisation, à l'administration ou à la fiscalité.
+1. ~~**Nom commercial et positionnement de marque.**~~ **Arbitré le 2026-08-03 : Koté.**
+   La promesse tient dans le mot : le service est juste à côté. Aucune référence à la
+   formalisation, à l'administration ni à la fiscalité, conformément à la section 3.1.
+   Le nom se prononce identiquement en français, en mina, en éwé et en kabyè, et il ne
+   nomme aucun métier, ce qui préserve l'étendue de l'offre côté client.
+   **Vérifications restant à faire avant tout dépôt** : absence de collision sur les
+   magasins d'applications au Togo et au Ghana, disponibilité du nom de domaine, et
+   dépôt de marque auprès de l'organisme compétent.
 2. **Concurrencer ou s'intégrer** à l'acteur super-app local existant.
 3. **Canal du code à usage unique** : SMS (coût par message et délivrance irrégulière)
    ou WhatsApp (gratuit, mais dépendance à un tiers et procédure de validation).
