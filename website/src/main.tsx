@@ -5,6 +5,8 @@ import './style.css'
 import './trade.css'
 import './pricing.css'
 import './fauna.css'
+import './three.css'
+import KoteScene from './components/KoteScene'
 
 const nav = [
   { href: '#/', label: 'Accueil' },
@@ -44,7 +46,7 @@ function Pricing() { const offers = [
   { name: 'Koté Pro+', price: '7 500', note: 'Pour les commerces déjà structurés.', features: ['Tout Koté Pro', 'Plusieurs points de vente', 'Promotions locales', 'Accompagnement prioritaire'] },
 ]; return <section className="pricing-section" id="offres"><div className="pricing-intro"><p className="eyebrow"><i /> Une formule qui grandit avec vous</p><h2>Être visible, <em>sans se ruiner.</em></h2><p>Les habitants utilisent Koté gratuitement. Les commerces choisissent le niveau d’accompagnement qui leur correspond.</p></div><div className="pricing-grid">{offers.map((offer) => <article className={offer.featured ? 'pricing-card featured' : 'pricing-card'} key={offer.name}>{offer.featured && <span className="popular">Le choix local</span>}<h3>{offer.name}</h3><p className="price"><b>{offer.price}</b> FCFA <small>/ mois</small></p><p className="pricing-note">{offer.note}</p><ul>{offer.features.map((feature) => <li key={feature}><Check size={15}/>{feature}</li>)}</ul><a className={offer.featured ? 'button button-orange' : 'button button-dark'} href="#/professionnels">Choisir cette formule <ArrowRight size={16}/></a></article>)}</div><p className="certification-note"><BadgeCheck size={18}/><span><b>Certification Koté :</b> une vérification réelle sur le terrain, proposée séparément quand votre fiche est prête.</span></p></section> }
 
-function Home() { return <><Hero/><Steps/><Trust/><ProfessionalCallout/><Pricing/></> }
+function Home() { return <><div className="hero-three" aria-hidden="true"><KoteScene/></div><Hero/><Steps/><Trust/><ProfessionalCallout/><Pricing/></> }
 
 const content = {
   how: { label: 'Le guide Koté', title: <>Trouver sans tourner<br/><em>en rond.</em></>, lead: 'Koté transforme les bonnes adresses de quartier en fiches utiles : une activité, un repère, une information fraîche et un contact direct.', blocks: [['Cherchez', 'Saisissez ce que vous cherchez ou parcourez les catégories proches.'], ['Vérifiez', 'Lisez les indications simples qui permettent d’évaluer une fiche.'], ['Contactez', 'Un clic vous mène au WhatsApp du commerce ou de l’artisan.']] },
