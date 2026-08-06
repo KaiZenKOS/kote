@@ -5,7 +5,7 @@
     "scheme": "kote",
     "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/icon-repere.png",
+    "icon": "./assets/icon-kote-2026.png",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#14100E",
     "ios": {
@@ -15,7 +15,7 @@
       "package": "app.kote.togo",
       "adaptiveIcon": {
         "backgroundColor": "#14100E",
-        "foregroundImage": "./assets/android-icon-foreground-repere.png",
+        "foregroundImage": "./assets/android-icon-foreground-kote-2026.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
