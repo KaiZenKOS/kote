@@ -1,6 +1,6 @@
 import { Image } from "react-native";
 
-const logoKote = require("../../assets/logo-kote-2026.png");
+const logoKote = require("../../assets/logo-kote-mark-2026.png");
 
 /** Le signe Koté utilisé au lancement et partout où la marque apparaît. */
 export function LogoRepere({ taille = 96 }: { taille?: number }) {
@@ -8,7 +8,7 @@ export function LogoRepere({ taille = 96 }: { taille?: number }) {
     <Image
       source={logoKote}
       accessibilityLabel="Logo Koté"
-      style={{ width: taille, height: taille * 1.1 }}
+      style={{ width: taille, height: taille }}
       resizeMode="contain"
     />
   );

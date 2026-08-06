@@ -7,7 +7,7 @@ import './logo-overrides.css'
 
 const nav = [{ href: '#/', label: 'Accueil' }, { href: '#/fonctionnement', label: 'Fonctionnement' }, { href: '#/commerces', label: 'Commerces' }, { href: '#/tarifs', label: 'Tarifs' }]
 
-function Brand({ inverse = false }: { inverse?: boolean }) { return <a className={`brand-v3 ${inverse ? 'inverse' : ''}`} href="#/" aria-label="Koté, accueil"><img src="/images/kote-mark-day.png" alt=""/><b>KOTÉ</b></a> }
+function Brand({ inverse = false }: { inverse?: boolean }) { return <a className={`brand-v3 ${inverse ? 'inverse' : ''}`} href="#/" aria-label="Koté, accueil"><img src="/images/kote-mark-day.png" alt=""/></a> }
 
 function Header({ path }: { path: string }) { const [open, setOpen] = useState(false); return <header className="header-v3"><Brand/><nav>{nav.map(item => <a className={item.href === path ? 'active' : ''} href={item.href} key={item.href}>{item.label}</a>)}</nav><a className="header-cta" href="#/commerces">Référencer mon commerce <ArrowRight size={15}/></a><button className="menu-v3" aria-label="Ouvrir le menu" aria-expanded={open} onClick={() => setOpen(!open)}>{open ? <X/> : <Menu/>}</button>{open && <div className="mobile-v3">{nav.map(item => <a href={item.href} onClick={() => setOpen(false)} key={item.href}>{item.label}<ChevronRight size={16}/></a>)}<a href="#/commerces" onClick={() => setOpen(false)}>Référencer mon commerce <ArrowRight size={16}/></a></div>}</header> }
 
