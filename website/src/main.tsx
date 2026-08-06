@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { ArrowRight, BadgeCheck, Check, ChevronRight, Compass, MapPin, Menu, MessageCircle, Moon, Search, ShieldCheck, Store, Sun, X } from 'lucide-react'
 import './site-v3.css'
 import './night-theme.css'
+import './hero-cleanup.css'
 import './logo-overrides.css'
 
 const nav = [{ href: '#/', label: 'Accueil' }, { href: '#/fonctionnement', label: 'Fonctionnement' }, { href: '#/commerces', label: 'Commerces' }, { href: '#/tarifs', label: 'Tarifs' }]

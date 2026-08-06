@@ -1,0 +1,12 @@
+/* The hero stays intentionally editorial: the photo carries the story without an app mockup over it. */
+.hero-object-v3 .product-card { display: none; }
+
+.hero-image-v3 { width: 72%; }
+
+@media (max-width: 820px) {
+  .hero-image-v3 { width: 58%; }
+}
+
+@media (max-width: 600px) {
+  .hero-image-v3 { width: 76%; }
+}
