@@ -1,0 +1,21 @@
+import { ActivityIndicator, Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { ArrowLeft, BadgeCheck, Clock3, EyeOff, ShieldAlert } from "lucide-react-native";
+import { useRouter } from "expo-router";
+import { lireFileModeration, traiterSignalement, type SignalementModeration } from "../src/api/moderation";
+import { Ecran } from "../src/composants/Ecran";
+import { BoutonRond } from "../src/composants/communs";
+import { couleurs, espaces, police, rayons, typo } from "../src/theme/tokens";
+
+export default function Administration() {
+  const insets = useSafeAreaInsets(); const router = useRouter(); const client = useQueryClient();
+  const file = useQuery({ queryKey: ["moderation"], queryFn: lireFileModeration, retry: false });
+  const agir = async (signalement: SignalementModeration, decision: "conserve" | "mise_a_confirmer" | "retiree") => {
+    try { await traiterSignalement(signalement.signalement_id, decision); await client.invalidateQueries({ queryKey: ["moderation"] }); }
+    catch { Alert.alert("Action impossible", "Vérifiez que votre compte est bien autorisé à modérer."); }
+  };
+  return <Ecran><ScrollView contentContainerStyle={[styles.contenu,{paddingTop:insets.top+espaces.xs,paddingBottom:insets.bottom+espaces.xl}]}><View style={styles.entete}><BoutonRond Icone={ArrowLeft} etiquette="Retour" onPress={()=>router.back()}/><View><Text style={styles.titre}>Modération</Text><Text style={styles.sous}>Signalements à vérifier</Text></View></View>{file.isPending ? <ActivityIndicator color={couleurs.accent}/> : file.isError ? <View style={styles.vide}><ShieldAlert size={30} color={couleurs.fraicheurAVerifier}/><Text style={styles.texte}>Cet espace est réservé aux comptes de modération.</Text></View> : file.data?.length === 0 ? <View style={styles.vide}><BadgeCheck size={32} color={couleurs.accentDoux}/><Text style={styles.texte}>Aucun signalement en attente.</Text></View> : file.data?.map(s=><Carte key={s.signalement_id} signalement={s} onAgir={agir}/>)}</ScrollView></Ecran>;
+}
+function Carte({ signalement, onAgir }: { signalement: SignalementModeration; onAgir: (s: SignalementModeration, d: "conserve"|"mise_a_confirmer"|"retiree")=>void }) { return <View style={styles.carte}><Text style={styles.nom}>{signalement.nom_enseigne}</Text><Text style={styles.motif}>{signalement.motif.replace("_", " ")}</Text>{signalement.commentaire ? <Text style={styles.texte}>{signalement.commentaire}</Text> : null}<View style={styles.actions}><Pressable style={styles.action} onPress={()=>onAgir(signalement,"conserve")}><BadgeCheck size={16} color={couleurs.accentDoux}/><Text style={styles.actionTexte}>Conserver</Text></Pressable><Pressable style={styles.action} onPress={()=>onAgir(signalement,"mise_a_confirmer")}><Clock3 size={16} color={couleurs.fraicheurAVerifier}/><Text style={styles.actionTexte}>Vérifier</Text></Pressable><Pressable style={styles.action} onPress={()=>onAgir(signalement,"retiree")}><EyeOff size={16} color={couleurs.fraicheurAVerifier}/><Text style={styles.actionTexte}>Retirer</Text></Pressable></View></View> }
+const styles=StyleSheet.create({contenu:{paddingHorizontal:espaces.md,gap:espaces.md},entete:{flexDirection:"row",alignItems:"center",gap:espaces.sm},titre:{color:couleurs.textePrincipal,fontSize:typo.titre,fontFamily:police.demi},sous:{color:couleurs.texteSecondaire,fontSize:typo.repere,fontFamily:police.normal},carte:{gap:espaces.xs,padding:espaces.md,borderRadius:rayons.tuile,backgroundColor:couleurs.surface1},nom:{color:couleurs.textePrincipal,fontFamily:police.demi,fontSize:18},motif:{color:couleurs.accentDoux,fontFamily:police.gras,fontSize:typo.libelle,textTransform:"uppercase"},texte:{color:couleurs.texteSecondaire,fontFamily:police.normal,fontSize:typo.repere,lineHeight:20},actions:{flexDirection:"row",gap:espaces.xs,flexWrap:"wrap",marginTop:espaces.xs},action:{minHeight:44,flexDirection:"row",alignItems:"center",gap:5,paddingHorizontal:10,borderRadius:rayons.pastille,backgroundColor:couleurs.surface2},actionTexte:{color:couleurs.textePrincipal,fontFamily:police.demi,fontSize:11},vide:{minHeight:240,alignItems:"center",justifyContent:"center",gap:espaces.sm,padding:espaces.lg}});
