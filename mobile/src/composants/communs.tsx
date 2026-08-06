@@ -237,12 +237,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: espaces.xs,
     alignSelf: "flex-start",
-    backgroundColor: couleurs.surface2,
-    borderRadius: rayons.pastille,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
   },
-  point: { width: 8, height: 8, borderRadius: 4 },
+  point: { width: 7, height: 7, borderRadius: 4 },
   pastilleTexte: {
     color: couleurs.texteSecondaire,
     fontSize: typo.libelle,

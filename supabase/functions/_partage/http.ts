@@ -22,7 +22,14 @@ export function prevol(requete: Request): Response | null {
 export function json(corps: unknown, statut = 200): Response {
   return new Response(JSON.stringify(corps), {
     status: statut,
-    headers: { ...ENTETES_CORS, "Content-Type": "application/json; charset=utf-8" },
+    // Les reponses peuvent contenir un lien WhatsApp individuel ou signaler
+    // l'etat d'une action. Elles ne doivent jamais etre conservees par un
+    // navigateur ou un proxy partage.
+    headers: {
+      ...ENTETES_CORS,
+      "Content-Type": "application/json; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
   });
 }
 

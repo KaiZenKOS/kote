@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
   confirmerActivite,
+  certifierFiche,
   creerFiche,
   majFiche,
   mesCommissions,
@@ -10,12 +11,37 @@ import {
   publierFiche,
   retirerFiche,
   revendiquerFiche,
+  revendiquerMesFiches,
   statistiques,
+  suggererDescription,
   type SaisieFiche,
 } from "../api/espace";
 import { cles } from "../query/cles";
 import { CLES_MUTATION } from "../query/mutations";
 import { useSession } from "./useSession";
+import { ajouterPhoto, mesPhotos, supprimerPhoto } from "../api/photos";
+import type { PhotoMarchand } from "../api/types";
+
+export function useMesPhotos(marchandId: string | null) {
+  const { connecte } = useSession();
+  return useQuery({ queryKey: ["espace", "photos", marchandId], queryFn: () => mesPhotos(marchandId!), enabled: connecte && marchandId !== null });
+}
+
+export function useAjouterPhoto() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (args: { marchandId: string; photo: Parameters<typeof ajouterPhoto>[1] }) => ajouterPhoto(args.marchandId, args.photo),
+    onSuccess: (_photo, args) => void client.invalidateQueries({ queryKey: ["espace", "photos", args.marchandId] }),
+  });
+}
+
+export function useSupprimerPhoto() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: (photo: PhotoMarchand) => supprimerPhoto(photo),
+    onSuccess: (_r, photo) => void client.invalidateQueries({ queryKey: ["espace", "photos", photo.marchand_id] }),
+  });
+}
 
 export function useMesFiches() {
   const { connecte } = useSession();
@@ -112,6 +138,23 @@ export function useRevendiquerFiche() {
     mutationFn: (id: string) => revendiquerFiche(id),
     onSuccess: () => void client.invalidateQueries({ queryKey: ["espace"] }),
   });
+}
+
+export function useRevendiquerMesFiches() {
+  const client = useQueryClient();
+  return useMutation({
+    mutationFn: revendiquerMesFiches,
+    onSuccess: () => void client.invalidateQueries({ queryKey: ["espace"] }),
+  });
+}
+
+export function useSuggestionDescription() {
+  return useMutation({ mutationFn: (args: { marchandId: string; mots: string[] }) => suggererDescription(args.marchandId, args.mots) });
+}
+
+export function useCertifierFiche() {
+  const client = useQueryClient();
+  return useMutation({ mutationFn: certifierFiche, onSuccess: () => void client.invalidateQueries({ queryKey: ["espace"] }) });
 }
 
 /**

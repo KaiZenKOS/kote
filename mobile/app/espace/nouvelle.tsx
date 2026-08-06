@@ -37,6 +37,8 @@ export default function NouvelleFiche() {
   const [repere, setRepere] = useState("");
   const [point, setPoint] = useState<Position | null>(null);
   const [envoye, setEnvoye] = useState(false);
+  const [erreur, setErreur] = useState<string | null>(null);
+  const [cleIdempotence] = useState(identifiantUnique);
 
   const estAmbassadeur = Boolean(ambassadeur.data?.actif);
 
@@ -61,6 +63,7 @@ export default function NouvelleFiche() {
     const numero = normaliserTelephone(telephone);
     if (!categorie || !numero) return;
 
+    setErreur(null);
     creer.mutate({
       nomEnseigne: nom.trim(),
       categorieSlug: categorie,
@@ -71,11 +74,13 @@ export default function NouvelleFiche() {
       // Cette distinction sert au controle qualite : dans un marche dense, une
       // fiche non ajustee est probablement a quelques etals de sa vraie place.
       positionAjustee: point !== null,
-      cleIdempotence: identifiantUnique(),
+      cleIdempotence,
       ambassadeurId: estAmbassadeur ? (utilisateurId ?? null) : null,
       proprietaireId: estAmbassadeur ? null : (utilisateurId ?? null),
+    }, {
+      onSuccess: () => setEnvoye(true),
+      onError: () => setErreur("La fiche n'a pas pu etre enregistree. Verifiez votre connexion et reessayez."),
     });
-    setEnvoye(true);
   };
 
   if (envoye) {
@@ -196,11 +201,18 @@ export default function NouvelleFiche() {
             </Text>
 
             <GrandBouton
-              libelle={estAmbassadeur ? "Enregistrer l'inscription" : "Créer ma fiche"}
+              libelle={
+                creer.isPending
+                  ? "Enregistrement..."
+                  : estAmbassadeur
+                    ? "Enregistrer l'inscription"
+                    : "Créer ma fiche"
+              }
               Icone={Check}
               desactive={creer.isPending}
               onPress={enregistrer}
             />
+            {erreur ? <Text style={styles.erreur}>{erreur}</Text> : null}
           </Etape>
         ) : null}
       </ScrollView>
@@ -227,6 +239,12 @@ const styles = StyleSheet.create({
     color: couleurs.texteSecondaire,
     fontSize: typo.repere,
     fontFamily: police.moyen,
+  },
+  erreur: {
+    color: couleurs.fraicheurAVerifier,
+    fontSize: typo.repere,
+    fontFamily: police.moyen,
+    lineHeight: typo.repere * 1.4,
   },
 
   fin: {

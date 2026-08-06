@@ -230,9 +230,9 @@ Trois mécanismes se combinent :
 
 Écarts assumés par rapport au `.pen` :
 
-- **Le bouton favori de la fiche n'est pas implémenté** : il n'a pas de
-  contrepartie côté backend. Plutôt qu'un cœur qui ne mémorise rien, il est
-  absent.
+- **Les favoris restent sur le téléphone.** Ils ne demandent ni compte client
+  ni connexion et ne remontent jamais au serveur : le client peut retrouver un
+  commerce repéré sans créer une nouvelle donnée personnelle.
 - **Le tri des résultats n'est pas exposé.** Le backend ordonne par fraîcheur
   puis distance ; un sélecteur sans effet réel serait un contrôle mort.
 - L'icône WhatsApp du `.pen` vient de Phosphor ; Lucide n'a pas d'icône de

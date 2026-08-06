@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Image,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -8,7 +10,9 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ArrowLeft, CircleCheck, Eye, Send, Trash2 } from "lucide-react-native";
+import { ArrowLeft, CircleCheck, Eye, Send, Trash2, ShieldCheck } from "lucide-react-native";
+import { Camera, ImagePlus } from "lucide-react-native";
+import * as ImagePicker from "expo-image-picker";
 
 import { Ecran } from "../../../src/composants/Ecran";
 import { BoutonRond } from "../../../src/composants/communs";
@@ -26,7 +30,13 @@ import {
   usePublierFiche,
   useRetirerFiche,
   useStatistiques,
+  useAjouterPhoto,
+  useMesPhotos,
+  useSupprimerPhoto,
+  useSuggestionDescription,
+  useCertifierFiche,
 } from "../../../src/hooks/useEspace";
+import { urlPhotoPrivee } from "../../../src/api/photos";
 import { couleurs, espaces, police, rayons, typo } from "../../../src/theme/tokens";
 
 export default function TableauFiche() {
@@ -41,9 +51,15 @@ export default function TableauFiche() {
   const publier = usePublierFiche();
   const retirer = useRetirerFiche();
   const maj = useMajFiche();
+  const photos = useMesPhotos(id ?? null);
+  const ajouterPhoto = useAjouterPhoto();
+  const supprimerPhoto = useSupprimerPhoto();
+  const suggestion = useSuggestionDescription();
+  const certifier = useCertifierFiche();
 
   const [repere, setRepere] = useState<string | null>(null);
   const [confirmationRetrait, setConfirmationRetrait] = useState(false);
+  const [mots, setMots] = useState("");
 
   const fiche = useMemo(
     () => (fiches.data ?? []).find((f) => f.id === id) ?? null,
@@ -73,6 +89,20 @@ export default function TableauFiche() {
   }
 
   const visible = fiche.statut === "active" || fiche.statut === "a_confirmer";
+
+  const ajouterDepuis = async (camera: boolean) => {
+    if (camera) {
+      const permission = await ImagePicker.requestCameraPermissionsAsync();
+      if (!permission.granted) return;
+    }
+    const resultat = camera
+      ? await ImagePicker.launchCameraAsync({ allowsEditing: true, aspect: [4, 3], quality: 0.7 })
+      : await ImagePicker.launchImageLibraryAsync({ allowsEditing: true, aspect: [4, 3], quality: 0.7 });
+    if (!resultat.canceled) {
+      const image = resultat.assets[0];
+      ajouterPhoto.mutate({ marchandId: fiche.id, photo: image });
+    }
+  };
 
   return (
     <Ecran>
@@ -137,6 +167,15 @@ export default function TableauFiche() {
             })
           }
         />
+        {estAmbassadeur ? (
+          <GrandBouton
+            libelle={certifier.isPending ? "Vérification…" : "Certifier après visite"}
+            Icone={ShieldCheck}
+            variante="secondaire"
+            desactive={certifier.isPending}
+            onPress={() => certifier.mutate(fiche.id)}
+          />
+        ) : null}
         <Text style={styles.note}>
           Confirmez de temps en temps : sans nouvelle de votre part, votre
           boutique finit par sortir des résultats.
@@ -152,6 +191,44 @@ export default function TableauFiche() {
             onPress={() => publier.mutate(fiche.id)}
           />
         ) : null}
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitre}>Description de votre activité</Text>
+          <GrandChamp libelle="Quelques mots sur ce que vous faites" aide="Exemple : robes sur mesure, retouches, pagnes" valeur={mots} onChange={setMots} maxLength={160} />
+          <GrandBouton
+            libelle={suggestion.isPending ? "Préparation…" : "Proposer une description"}
+            variante="secondaire"
+            desactive={suggestion.isPending || mots.trim().length < 3}
+            onPress={() => suggestion.mutate({ marchandId: fiche.id, mots: mots.split(",").map((mot) => mot.trim()).filter(Boolean) })}
+          />
+          {(suggestion.data ?? []).map((proposition) => (
+            <Pressable key={proposition} style={styles.proposition} onPress={() => maj.mutate({ id: fiche.id, champs: { description: proposition } })}>
+              <Text style={styles.propositionTexte}>{proposition}</Text>
+              <Text style={styles.propositionAction}>Utiliser ce texte</Text>
+            </Pressable>
+          ))}
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitre}>Photos de votre activité</Text>
+          <Text style={styles.note}>Ajoutez jusqu’à 5 photos nettes. Elles seront visibles après vérification.</Text>
+          <View style={styles.photos}>
+            {(photos.data ?? []).map((photo) => (
+              <View key={photo.id} style={styles.photoBloc}>
+                <Image source={{ uri: urlPhotoPrivee(photo.chemin) }} style={styles.photo} />
+                <Pressable onPress={() => supprimerPhoto.mutate(photo)} style={styles.supprimerPhoto}>
+                  <Text style={styles.supprimerPhotoTexte}>Retirer</Text>
+                </Pressable>
+              </View>
+            ))}
+          </View>
+          {(photos.data?.length ?? 0) < 5 ? (
+            <View style={styles.actionsPhotos}>
+              <GrandBouton libelle={ajouterPhoto.isPending ? "Envoi…" : "Prendre une photo"} Icone={Camera} variante="secondaire" desactive={ajouterPhoto.isPending} onPress={() => void ajouterDepuis(true)} />
+              <GrandBouton libelle="Choisir dans le téléphone" Icone={ImagePlus} variante="secondaire" desactive={ajouterPhoto.isPending} onPress={() => void ajouterDepuis(false)} />
+            </View>
+          ) : null}
+        </View>
 
         <View style={styles.section}>
           <GrandChamp
@@ -267,6 +344,16 @@ const styles = StyleSheet.create({
   },
 
   section: { gap: espaces.sm, marginTop: espaces.xs },
+  sectionTitre: { color: couleurs.textePrincipal, fontSize: typo.corps, fontFamily: police.demi },
+  photos: { flexDirection: "row", flexWrap: "wrap", gap: espaces.sm },
+  photoBloc: { width: 100, gap: 4 },
+  photo: { width: 100, height: 76, borderRadius: 10, backgroundColor: couleurs.surface2 },
+  supprimerPhoto: { minHeight: 32, alignItems: "center", justifyContent: "center" },
+  supprimerPhotoTexte: { color: couleurs.accentDoux, fontSize: typo.libelle, fontFamily: police.moyen },
+  actionsPhotos: { gap: espaces.xs },
+  proposition: { gap: espaces.xs, padding: espaces.md, borderRadius: rayons.tuile, backgroundColor: couleurs.surface1 },
+  propositionTexte: { color: couleurs.textePrincipal, fontSize: typo.repere, fontFamily: police.normal, lineHeight: typo.repere * 1.45 },
+  propositionAction: { color: couleurs.accentDoux, fontSize: typo.libelle, fontFamily: police.demi },
   apercu: { flexDirection: "row", alignItems: "center", gap: espaces.xs },
   apercuTexte: {
     color: couleurs.texteSecondaire,

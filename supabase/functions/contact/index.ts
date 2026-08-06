@@ -46,10 +46,15 @@ Deno.serve(async (requete) => {
   if (!estEmpreinte(corps.appareil_hash)) return erreur("appareil_hash invalide", 400);
 
   const client = clientService();
+  const autorisation = requete.headers.get("Authorization");
+  const jeton = autorisation?.startsWith("Bearer ") ? autorisation.slice(7) : null;
+  if (!jeton) return erreur("Profil requis pour contacter un commerce", 401, "auth");
+  const { data: auth, error: erreurAuth } = await client.auth.getUser(jeton);
+  if (erreurAuth || !auth.user) return erreur("Profil requis pour contacter un commerce", 401, "auth");
 
   const autorise = await consommerQuota(
     client,
-    `contact:${corps.appareil_hash}`,
+    `contact:${auth.user.id}:${corps.appareil_hash}`,
     PLAFOND_HORAIRE,
   );
   if (!autorise) return erreur("Trop de demandes, reessayez plus tard", 429, "quota");

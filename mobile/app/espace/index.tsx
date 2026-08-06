@@ -36,6 +36,8 @@ import {
   useConfirmerActivite,
   useMesFiches,
   useMonAmbassadeur,
+  useMesCommissions,
+  useRevendiquerMesFiches,
 } from "../../src/hooks/useEspace";
 import { useSession } from "../../src/hooks/useSession";
 import { couleurs, espaces, police, rayons, typo } from "../../src/theme/tokens";
@@ -203,6 +205,8 @@ function Tableau({ telephone }: { telephone: string | null }) {
   const fiches = useMesFiches();
   const ambassadeur = useMonAmbassadeur();
   const confirmer = useConfirmerActivite();
+  const commissions = useMesCommissions();
+  const revendiquer = useRevendiquerMesFiches();
 
   const estAmbassadeur = Boolean(ambassadeur.data?.actif);
   const mesFiches = fiches.data ?? [];
@@ -254,6 +258,28 @@ function Tableau({ telephone }: { telephone: string | null }) {
               }
             />
           ))}
+        </View>
+      ) : null}
+
+      {!estAmbassadeur ? (
+        <View style={styles.reprendre}>
+          <Text style={styles.reprendreTitre}>Vous avez déjà une fiche ?</Text>
+          <Text style={styles.reprendreTexte}>Si un ambassadeur l’a créée avec ce numéro, récupérez-la en un appui.</Text>
+          <GrandBouton
+            libelle={revendiquer.isPending ? "Recherche…" : "Récupérer ma fiche"}
+            variante="secondaire"
+            desactive={revendiquer.isPending}
+            onPress={() => revendiquer.mutate()}
+          />
+        </View>
+      ) : null}
+
+      {estAmbassadeur ? (
+        <View style={styles.reprendre}>
+          <Text style={styles.reprendreTitre}>Votre tournée</Text>
+          <Text style={styles.reprendreTexte}>
+            {mesFiches.length} inscription{mesFiches.length > 1 ? "s" : ""} · {(commissions.data ?? []).filter((c) => c.statut === "validee" || c.statut === "payee").reduce((total, c) => total + c.montant_fcfa, 0)} FCFA validés
+          </Text>
         </View>
       ) : null}
 
@@ -377,6 +403,14 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: couleurs.fraicheurAVerifier,
   },
+  reprendre: {
+    gap: espaces.sm,
+    padding: espaces.md,
+    borderRadius: rayons.tuile,
+    backgroundColor: couleurs.surface1,
+  },
+  reprendreTitre: { color: couleurs.accentDoux, fontSize: typo.corps, fontFamily: police.demi },
+  reprendreTexte: { color: couleurs.texteSecondaire, fontSize: typo.repere, fontFamily: police.normal, lineHeight: typo.repere * 1.4 },
   alerteTitre: {
     color: couleurs.textePrincipal,
     fontSize: 18,

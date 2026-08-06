@@ -54,6 +54,8 @@ export interface FicheMarchand {
   statut: StatutMarchand;
   zone_id: string | null;
   derniere_confirmation: string;
+  verifiee_terrain: boolean;
+  verifiee_le: string | null;
   jours_depuis_confirmation: number;
   photo_principale: string | null;
   cree_le: string;

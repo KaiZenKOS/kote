@@ -23,7 +23,10 @@ export type EtatPosition =
  *     batterie est desinstallee. La precision « equilibree » suffit largement
  *     pour un rayon de quelques centaines de metres.
  */
-export function usePosition(): EtatPosition & { rafraichir: () => void } {
+export function usePosition(): EtatPosition & {
+  /** Renvoie la coordonnee effectivement recue, pour recentrer une carte. */
+  rafraichir: () => Promise<Position | null>;
+} {
   const [etat, setEtat] = useState<EtatPosition>({ statut: "chargement" });
 
   const acquerir = useCallback(async () => {
@@ -31,7 +34,7 @@ export function usePosition(): EtatPosition & { rafraichir: () => void } {
       const { granted } = await Location.requestForegroundPermissionsAsync();
       if (!granted) {
         setEtat({ statut: "refusee" });
-        return;
+        return null;
       }
 
       const derniere = await Location.getLastKnownPositionAsync({
@@ -57,10 +60,15 @@ export function usePosition(): EtatPosition & { rafraichir: () => void } {
           longitude: actuelle.coords.longitude,
         },
       });
+      return {
+        latitude: actuelle.coords.latitude,
+        longitude: actuelle.coords.longitude,
+      };
     } catch {
       setEtat((precedent) =>
         precedent.statut === "prete" ? precedent : { statut: "indisponible" },
       );
+      return null;
     }
   }, []);
 
@@ -68,7 +76,7 @@ export function usePosition(): EtatPosition & { rafraichir: () => void } {
     void acquerir();
   }, [acquerir]);
 
-  return { ...etat, rafraichir: () => void acquerir() };
+  return { ...etat, rafraichir: acquerir };
 }
 
 /** Repli sur le centre de Lome quand la position est refusee ou indisponible. */

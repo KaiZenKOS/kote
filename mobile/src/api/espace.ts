@@ -7,7 +7,7 @@
  * l'arbitre de ce qu'il a le droit de lire.
  */
 
-import { supabase, erreurDepuisPostgrest } from "./client";
+import { supabase, erreurDepuisPostgrest, appelerFonction } from "./client";
 import { ErreurApi } from "./erreurs";
 import type { Position, StatutMarchand } from "./types";
 
@@ -217,6 +217,22 @@ export async function revendiquerFiche(id: string): Promise<void> {
   const { error } = await supabase.rpc("revendiquer_ma_fiche", {
     p_marchand_id: id,
   });
+  if (error) throw erreurDepuisPostgrest(error);
+}
+
+export async function revendiquerMesFiches(): Promise<number> {
+  const { data, error } = await supabase.rpc("revendiquer_mes_fiches");
+  if (error) throw erreurDepuisPostgrest(error);
+  return typeof data === "number" ? data : 0;
+}
+
+export async function suggererDescription(marchandId: string, mots: string[]): Promise<string[]> {
+  const resultat = await appelerFonction<{ propositions: string[] }>("ia-description", { marchand_id: marchandId, mots_cles: mots });
+  return resultat.propositions;
+}
+
+export async function certifierFiche(id: string): Promise<void> {
+  const { error } = await supabase.rpc("certifier_fiche", { p_marchand_id: id });
   if (error) throw erreurDepuisPostgrest(error);
 }
 

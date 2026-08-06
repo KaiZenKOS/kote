@@ -1,4 +1,4 @@
-import { Linking } from "react-native";
+import { Linking, Platform } from "react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { demanderContact, signaler } from "../api/actions";
@@ -63,10 +63,34 @@ export function useSignalement() {
 
 /** Itineraire : journalise puis delegue a l'application de cartes du telephone. */
 export function useItineraire() {
-  return async (marchandId: string, latitude: number, longitude: number) => {
+  return async (
+    marchandId: string,
+    latitude: number,
+    longitude: number,
+    depart?: Position | null,
+  ) => {
     void journaliser({ type: "clic_itineraire", marchand_id: marchandId });
-    const url = `geo:${latitude},${longitude}?q=${latitude},${longitude}`;
-    const secours = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-    await Linking.openURL((await Linking.canOpenURL(url)) ? url : secours);
+    const destination = `${latitude},${longitude}`;
+    const origine = depart ? `&origin=${depart.latitude},${depart.longitude}` : "";
+    const secours = `https://www.google.com/maps/dir/?api=1&destination=${destination}${origine}&travelmode=walking`;
+    // Les schemes natifs ouvrent directement l'ecran de guidage, pas une
+    // simple epingle. La marche est le mode le plus utile dans un quartier;
+    // l'utilisateur peut bien sur le changer dans son application de cartes.
+    const urlNatif = Platform.select({
+      android: `google.navigation:q=${destination}&mode=w`,
+      ios: `http://maps.apple.com/?daddr=${destination}&dirflg=w`,
+      default: secours,
+    }) ?? secours;
+
+    try {
+      if (await Linking.canOpenURL(urlNatif)) {
+        await Linking.openURL(urlNatif);
+        return;
+      }
+    } catch {
+      // Une application de navigation peut annoncer son scheme sans pouvoir
+      // finalement s'ouvrir. Le lien universel reste alors la sortie fiable.
+    }
+    await Linking.openURL(secours);
   };
 }

@@ -2,14 +2,15 @@ import { useMemo, useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import { ArrowLeft, LocateFixed } from "lucide-react-native";
+import { ArrowLeft, LocateFixed, Navigation, X } from "lucide-react-native";
 
 import { CarteInteractive } from "../src/carte/CarteInteractive";
-import { BoutonRond } from "../src/composants/communs";
+import { BoutonRond, BoutonSecondaire } from "../src/composants/communs";
 import { CarteCommerce, formaterDistance } from "../src/composants/cartes";
 import { useLibellesCategories } from "../src/hooks/useLibelles";
 import { usePrechargementFiche } from "../src/hooks/useFiche";
 import { useRecherche } from "../src/hooks/useRecherche";
+import { useItineraire } from "../src/hooks/useActions";
 import { CENTRE_LOME, usePosition } from "../src/hooks/usePosition";
 import { couleurs, espaces, police, rayons, typo } from "../src/theme/tokens";
 
@@ -22,6 +23,7 @@ export default function Carte() {
   const etatPosition = usePosition();
   const libelles = useLibellesCategories();
   const precharger = usePrechargementFiche();
+  const ouvrirItineraire = useItineraire();
   const [recentrage, setRecentrage] = useState<{
     position: { latitude: number; longitude: number };
     zoom?: number;
@@ -52,9 +54,26 @@ export default function Carte() {
     [marchands, selection],
   );
 
-  const recentrer = () => {
-    etatPosition.rafraichir();
-    setRecentrage({ position, zoom: ZOOM_QUARTIER, cle: Date.now() });
+  const recentrer = async () => {
+    const positionActuelle = await etatPosition.rafraichir();
+    setSelection(null);
+    setRecentrage({
+      position: positionActuelle ?? position,
+      zoom: ZOOM_QUARTIER,
+      cle: Date.now(),
+    });
+  };
+
+  const selectionner = (id: string | null) => {
+    const marchand = marchands.find((item) => item.id === id);
+    setSelection(id);
+    if (!marchand) return;
+    precharger(marchand.id);
+    setRecentrage({
+      position: { latitude: marchand.latitude, longitude: marchand.longitude },
+      zoom: 16,
+      cle: Date.now(),
+    });
   };
 
   return (
@@ -67,9 +86,10 @@ export default function Carte() {
           latitude: m.latitude,
           longitude: m.longitude,
           icone: m.categorie_slug,
+          libelle: m.nom_enseigne,
         }))}
         selection={selection}
-        onSelectionner={(id) => setSelection(id || null)}
+        onSelectionner={(id) => selectionner(id || null)}
         onEchecFond={() => setFondIndisponible(true)}
         onFondCharge={() => setFondIndisponible(false)}
         recentrerSur={recentrage}
@@ -84,7 +104,7 @@ export default function Carte() {
       <BoutonRond
         Icone={LocateFixed}
         etiquette="Recentrer sur ma position"
-        onPress={recentrer}
+        onPress={() => void recentrer()}
         style={{ position: "absolute", right: espaces.md, top: insets.top + 8 }}
       />
 
@@ -100,11 +120,32 @@ export default function Carte() {
       <View style={[styles.bas, { paddingBottom: insets.bottom + espaces.sm }]}>
         {selectionne ? (
           <View style={styles.apercu}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Fermer l'aperçu du commerce"
+              onPress={() => setSelection(null)}
+              hitSlop={10}
+              style={styles.fermerApercu}
+            >
+              <X size={18} color={couleurs.textePrincipal} />
+            </Pressable>
             <CarteCommerce
               marchand={selectionne}
               libelleCategorie={libelles.get(selectionne.categorie_slug)}
               onApparait={() => precharger(selectionne.id)}
               onPress={() => router.push(`/fiche/${selectionne.id}`)}
+            />
+            <BoutonSecondaire
+              libelle="Lancer l'itinéraire"
+              Icone={Navigation}
+              onPress={() =>
+                void ouvrirItineraire(
+                  selectionne.id,
+                  selectionne.latitude,
+                  selectionne.longitude,
+                  etatPosition.statut === "prete" ? etatPosition.position : null,
+                )
+              }
             />
           </View>
         ) : (
@@ -117,16 +158,15 @@ export default function Carte() {
               <Pressable
                 key={m.id}
                 accessibilityRole="button"
-                style={styles.vignette}
                 onPress={() => {
-                  setSelection(m.id);
-                  precharger(m.id);
-                  setRecentrage({
-                    position: { latitude: m.latitude, longitude: m.longitude },
-                    zoom: 16,
-                    cle: Date.now(),
-                  });
+                  selectionner(m.id);
                 }}
+                accessibilityState={{ selected: selection === m.id }}
+                style={({ pressed }) => [
+                  styles.vignette,
+                  selection === m.id && styles.vignetteActive,
+                  pressed && styles.vignettePresse,
+                ]}
               >
                 <Text style={styles.vignetteNom} numberOfLines={1}>
                   {m.nom_enseigne}
@@ -165,7 +205,21 @@ const styles = StyleSheet.create({
   },
 
   bas: { position: "absolute", left: 0, right: 0, bottom: 0 },
-  apercu: { paddingHorizontal: espaces.md },
+  apercu: { paddingHorizontal: espaces.md, position: "relative", gap: espaces.xs },
+  fermerApercu: {
+    position: "absolute",
+    zIndex: 2,
+    right: espaces.lg,
+    top: espaces.xs,
+    width: 36,
+    height: 36,
+    borderRadius: rayons.pastille,
+    backgroundColor: couleurs.surface1,
+    borderWidth: 1,
+    borderColor: couleurs.bordure,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   bandeau: { paddingHorizontal: espaces.md, gap: espaces.xs },
   vignette: {
     minHeight: 56,
@@ -179,6 +233,8 @@ const styles = StyleSheet.create({
     borderColor: couleurs.bordure,
     maxWidth: 220,
   },
+  vignetteActive: { borderColor: couleurs.accent, backgroundColor: couleurs.surface1 },
+  vignettePresse: { opacity: 0.72 },
   vignetteNom: {
     color: couleurs.textePrincipal,
     fontSize: typo.repere,

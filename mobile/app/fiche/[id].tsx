@@ -21,6 +21,7 @@ import {
   Navigation,
   RefreshCw,
   TriangleAlert,
+  ShieldCheck,
   WifiOff,
 } from "lucide-react-native";
 
@@ -42,6 +43,7 @@ import { useContactWhatsApp, useItineraire } from "../../src/hooks/useActions";
 import { useFiche, useVueFiche } from "../../src/hooks/useFiche";
 import { useLibellesCategories } from "../../src/hooks/useLibelles";
 import { usePosition } from "../../src/hooks/usePosition";
+import { useSession } from "../../src/hooks/useSession";
 import { estEnLigne } from "../../src/query/reseau";
 import { couleurs, espaces, police, rayons, typo } from "../../src/theme/tokens";
 
@@ -56,6 +58,7 @@ export default function Fiche() {
   const contact = useContactWhatsApp();
   const favoris = useFavoris();
   const ouvrirItineraire = useItineraire();
+  const session = useSession();
 
   useVueFiche(id ?? null);
 
@@ -168,6 +171,12 @@ export default function Fiche() {
             {libelles.get(donnees.categorie_slug) ?? donnees.categorie_slug}
             {distance !== null ? ` · ${formaterDistance(distance)}` : ""}
           </Text>
+          {donnees.verifiee_terrain ? (
+            <View style={styles.verification}>
+              <ShieldCheck size={16} color={couleurs.fraicheurBonne} />
+              <Text style={styles.verificationTexte}>Vérifiée sur le terrain par Koté</Text>
+            </View>
+          ) : null}
 
           <View style={styles.repere}>
             <View style={styles.repereBalise}>
@@ -221,13 +230,14 @@ export default function Fiche() {
             }
             Icone={MessageCircle}
             desactive={contact.isPending}
-            onPress={() =>
+            onPress={() => {
+              if (!session.connecte) { router.push("/profil"); return; }
               contact.mutate({
                 marchandId: donnees.id,
                 position:
                   etatPosition.statut === "prete" ? etatPosition.position : null,
-              })
-            }
+              });
+            }}
           />
           {contact.isError ? (
             <Text style={styles.erreurContact}>
@@ -245,6 +255,7 @@ export default function Fiche() {
                 donnees.id,
                 donnees.latitude,
                 donnees.longitude,
+                etatPosition.statut === "prete" ? etatPosition.position : null,
               )
             }
           />
@@ -304,6 +315,8 @@ const styles = StyleSheet.create({
     fontFamily: police.moyen,
     marginTop: -12,
   },
+  verification: { flexDirection: "row", alignItems: "center", gap: 6, marginTop: -8 },
+  verificationTexte: { color: couleurs.fraicheurBonne, fontSize: typo.libelle, fontFamily: police.demi },
 
   repere: {
     flexDirection: "row",

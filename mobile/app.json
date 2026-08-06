@@ -5,7 +5,7 @@
     "scheme": "kote",
     "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-repere.png",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#14100E",
     "ios": {
@@ -15,7 +15,7 @@
       "package": "app.kote.togo",
       "adaptiveIcon": {
         "backgroundColor": "#14100E",
-        "foregroundImage": "./assets/android-icon-foreground.png",
+        "foregroundImage": "./assets/android-icon-foreground-repere.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
@@ -31,6 +31,14 @@
       ],
       "expo-font",
       "expo-splash-screen",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "Koté utilise l’appareil photo uniquement pour ajouter une photo de votre activité.",
+          "photosPermission": "Koté accède à vos photos uniquement pour ajouter une photo de votre activité.",
+          "microphonePermission": false
+        }
+      ],
       "@maplibre/maplibre-react-native"
     ],
     "web": {

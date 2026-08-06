@@ -18,8 +18,10 @@
 
 import { clientService, clientUtilisateur } from "../_partage/client.ts";
 import { corpsJson, erreur, estUuid, json, prevol, texteBorne } from "../_partage/http.ts";
+import { consommerQuota } from "../_partage/quota.ts";
 
 const CLE_ANTHROPIC = Deno.env.get("ANTHROPIC_API_KEY");
+const PLAFOND_HORAIRE_UTILISATEUR = 20;
 // Modele choisi pour son cout par requete, pas pour sa puissance : la tache est
 // une reformulation courte et cadree.
 const MODELE = Deno.env.get("MODELE_IA") ?? "claude-haiku-4-5-20251001";
@@ -121,9 +123,17 @@ Deno.serve(async (requete) => {
   const mots = normaliserMots(corps.mots_cles);
   if (!mots) return erreur("mots_cles invalides", 400);
 
+  // Une cle anonyme est aussi un JWT valide pour l'infrastructure Supabase.
+  // On exige donc explicitement un utilisateur connecte, pas seulement un
+  // en-tete Authorization present.
+  const utilisateur = clientUtilisateur(entete);
+  const { data: identite, error: erreurIdentite } = await utilisateur.auth.getUser();
+  if (erreurIdentite || !identite.user) {
+    return erreur("Authentification requise", 401);
+  }
+
   // Verification de propriete par RLS : si l'appelant ne peut pas lire la
   // fiche, il ne peut pas la faire rediger.
-  const utilisateur = clientUtilisateur(entete);
   const { data: fiche, error: erreurFiche } = await utilisateur
     .from("marchand")
     .select("id, categorie_slug")
@@ -137,6 +147,17 @@ Deno.serve(async (requete) => {
   if (!fiche) return erreur("Fiche introuvable ou acces refuse", 403);
 
   const service = clientService();
+  // Le quota par fiche protege le cout unitaire. Celui-ci empeche qu'un compte
+  // cree de nombreuses fiches ou multiplie les demandes pour saturer l'API.
+  const autorise = await consommerQuota(
+    service,
+    `ia:${identite.user.id}`,
+    PLAFOND_HORAIRE_UTILISATEUR,
+  );
+  if (!autorise) {
+    return erreur("Trop de demandes, reessayez plus tard", 429, "quota");
+  }
+
   const cle = await empreinte(fiche.categorie_slug, mots);
 
   // 1. Cache. Une generation payee une fois sert a plusieurs fiches.

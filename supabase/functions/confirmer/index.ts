@@ -26,7 +26,11 @@ p{margin:0;color:#3d4f47}
 
   return new Response(html, {
     status: statut,
-    headers: { ...ENTETES_CORS, "Content-Type": "text/html; charset=utf-8" },
+    headers: {
+      ...ENTETES_CORS,
+      "Content-Type": "text/html; charset=utf-8",
+      "Cache-Control": "no-store",
+    },
   });
 }
 

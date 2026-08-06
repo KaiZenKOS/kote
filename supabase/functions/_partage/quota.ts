@@ -21,10 +21,10 @@ export async function consommerQuota(
   });
 
   if (error) {
-    // Un incident sur le compteur ne doit pas rendre le service indisponible :
-    // on laisse passer, l'evenement reste tracable cote journaux.
+    // En cas de doute, on bloque. Laisser passer transformerait une panne du
+    // garde-fou en fenetre d'extraction de numeros ou de gonflage des mesures.
     console.error("consommer_quota", error.message);
-    return true;
+    return false;
   }
 
   return data === true;

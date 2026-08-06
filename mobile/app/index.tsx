@@ -17,6 +17,7 @@ import {
   MapPin,
   RefreshCw,
   Search,
+  UserRound,
   WifiOff,
 } from "lucide-react-native";
 
@@ -25,6 +26,7 @@ import { EtatPleinEcran, TitreSection } from "../src/composants/communs";
 import { CarteCommerce, PuceCategorie } from "../src/composants/cartes";
 import { useCategories, useComptages } from "../src/hooks/useCategories";
 import { usePrechargementFiche } from "../src/hooks/useFiche";
+import { useSession } from "../src/hooks/useSession";
 import { useLibellesCategories } from "../src/hooks/useLibelles";
 import { useRecherche } from "../src/hooks/useRecherche";
 import { CENTRE_LOME, usePosition } from "../src/hooks/usePosition";
@@ -58,6 +60,7 @@ export default function Accueil() {
   });
   const libelles = useLibellesCategories();
   const precharger = usePrechargementFiche();
+  const session = useSession();
 
   const puces = useMemo(() => {
     const parSlug = new Map(
@@ -126,11 +129,11 @@ export default function Accueil() {
           </View>
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Aide et informations"
+            accessibilityLabel="Mon profil"
             style={styles.avatar}
-            onPress={() => router.push("/aide")}
+            onPress={() => router.push("/profil")}
           >
-            <Text style={styles.avatarTexte}>?</Text>
+            <UserRound size={21} color={couleurs.textePrincipal} />
           </Pressable>
         </View>
 
@@ -220,6 +223,16 @@ export default function Accueil() {
           >
             <IconeCarte size={20} color={couleurs.textePrincipal} />
             <Text style={styles.fabTexte}>Voir sur la carte</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            style={styles.commercant}
+            onPress={() => router.push("/espace")}
+          >
+            <Text style={styles.commercantTitre}>Vous avez un commerce ?</Text>
+            <Text style={styles.commercantTexte}>
+              Faites-vous trouver par les clients de votre quartier.
+            </Text>
           </Pressable>
         </View>
       </ScrollView>
@@ -311,7 +324,7 @@ const styles = StyleSheet.create({
   },
   rangee: { flexDirection: "row", gap: espaces.sm },
 
-  pied: { alignItems: "center", paddingTop: espaces.xs },
+  pied: { alignItems: "center", gap: espaces.md, paddingTop: espaces.xs },
   fab: {
     flexDirection: "row",
     alignItems: "center",
@@ -328,5 +341,25 @@ const styles = StyleSheet.create({
     color: couleurs.textePrincipal,
     fontSize: typo.corps,
     fontFamily: police.demi,
+  },
+  commercant: {
+    alignSelf: "stretch",
+    gap: 4,
+    padding: espaces.md,
+    borderRadius: rayons.tuile,
+    backgroundColor: couleurs.surface1,
+    borderWidth: 1,
+    borderColor: couleurs.bordure,
+  },
+  commercantTitre: {
+    color: couleurs.accentDoux,
+    fontSize: typo.corps,
+    fontFamily: police.demi,
+  },
+  commercantTexte: {
+    color: couleurs.texteSecondaire,
+    fontSize: typo.repere,
+    fontFamily: police.normal,
+    lineHeight: typo.repere * 1.4,
   },
 });

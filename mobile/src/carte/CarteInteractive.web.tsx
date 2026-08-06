@@ -72,7 +72,11 @@ export function CarteInteractive({
     instance.on("style.load", () => onFondCharge?.());
     instance.on("error", () => onEchecFond?.());
     instance.on("click", (e: MapMouseEvent) => {
-      onAppui?.({ longitude: e.lngLat.lng, latitude: e.lngLat.lat });
+      if (onAppui) {
+        onAppui({ longitude: e.lngLat.lng, latitude: e.lngLat.lat });
+      } else {
+        onSelectionner?.("");
+      }
     });
 
     carte.current = instance;
@@ -100,10 +104,12 @@ export function CarteInteractive({
       const actif = m.id === selection;
       const initiale = m.icone.slice(0, 1).toUpperCase();
 
+      // MapLibre conserve la reference de son element DOM. Le remplacer avec
+      // `replaceWith` rendait l'epingle visuellement correcte mais non
+      // cliquable apres une selection. On recree donc proprement son noeud.
       if (existante) {
-        existante.getElement().replaceWith(elementMarqueur(actif, initiale));
-        existante.setLngLat([m.longitude, m.latitude]);
-        continue;
+        existante.remove();
+        epingles.current.delete(m.id);
       }
 
       const el = elementMarqueur(actif, initiale);

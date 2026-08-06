@@ -30,6 +30,8 @@ export interface Marqueur {
   longitude: number;
   /** Identifiant d'icone de categorie. */
   icone: string;
+  /** Nom lu par le lecteur d'ecran et affiche dans le contexte de l'epingle. */
+  libelle?: string;
 }
 
 export interface ProprietesCarte {
@@ -66,6 +68,17 @@ export function CarteInteractive({
 }: ProprietesCarte) {
   const camera = useRef<CameraRef>(null);
 
+  // La carte est creee une fois avec le centre de secours de Lome. Des que le
+  // GPS repond, on rejoint naturellement la vraie position au lieu de laisser
+  // l'utilisateur au centre de la ville sans explication.
+  useEffect(() => {
+    camera.current?.flyTo({
+      center: [centre.longitude, centre.latitude],
+      zoom,
+      duration: 500,
+    });
+  }, [centre.latitude, centre.longitude, zoom]);
+
   useEffect(() => {
     if (!recentrerSur) return;
     camera.current?.flyTo({
@@ -87,7 +100,9 @@ export function CarteInteractive({
         if (lngLat && onAppui) {
           onAppui({ longitude: lngLat[0], latitude: lngLat[1] });
         }
-        if (!lngLat && onSelectionner) onSelectionner("");
+        // Hors creation de fiche, toucher le fond est le geste attendu pour
+        // refermer l'apercu et retrouver toute la carte.
+        if (!onAppui) onSelectionner?.("");
       }}
       onDidFailLoadingMap={onEchecFond}
       onDidFinishLoadingStyle={onFondCharge}
@@ -117,6 +132,8 @@ export function CarteInteractive({
           <Marker key={m.id} lngLat={[m.longitude, m.latitude]}>
             <Pressable
               accessibilityRole="button"
+              accessibilityLabel={m.libelle ?? "Voir ce commerce"}
+              accessibilityState={{ selected: actif }}
               onPress={() => onSelectionner?.(m.id)}
               style={[styles.epingle, actif && styles.epingleActive]}
             >
