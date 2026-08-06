@@ -1,1 +1,14 @@
+Exit code: 0
+Wall time: 1.7 seconds
+Output:
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://kote.tg/</loc></url>
+  <url><loc>https://kote.tg/#/fonctionnement</loc></url>
+  <url><loc>https://kote.tg/#/commerces</loc></url>
+  <url><loc>https://kote.tg/#/tarifs</loc></url>
+  <url><loc>https://kote.tg/#/faq</loc></url>
+  <url><loc>https://kote.tg/#/confidentialite</loc></url>
+</urlset>
+
 
