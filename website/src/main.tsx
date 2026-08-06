@@ -1,7 +1,8 @@
 import { createRoot } from 'react-dom/client'
 import { useEffect, useState, type ReactNode } from 'react'
-import { ArrowRight, BadgeCheck, Check, ChevronRight, Compass, MapPin, Menu, MessageCircle, Search, ShieldCheck, Store, X } from 'lucide-react'
+import { ArrowRight, BadgeCheck, Check, ChevronRight, Compass, MapPin, Menu, MessageCircle, Moon, Search, ShieldCheck, Store, Sun, X } from 'lucide-react'
 import './site-v3.css'
+import './night-theme.css'
 
 const nav = [{ href: '#/', label: 'Accueil' }, { href: '#/fonctionnement', label: 'Fonctionnement' }, { href: '#/commerces', label: 'Commerces' }, { href: '#/tarifs', label: 'Tarifs' }]
 
@@ -28,5 +29,12 @@ function PricingPage() { return <section className="pricing-v3"><div className="
 
 function NotFound() { return <section className="not-found-v3"><p className="eyebrow-v3"><i/> 404</p><h1>Cette adresse n’est pas<br/><em>dans le quartier.</em></h1><Action href="#/">Revenir à l’accueil</Action></section> }
 function Footer() { return <footer className="footer-v3"><div><Brand inverse/><p>Les bonnes adresses du quartier, enfin visibles.</p></div><div className="footer-links-v3"><section><b>Découvrir</b><a href="#/fonctionnement">Fonctionnement</a><a href="#/a-propos">Notre mission</a></section><section><b>Commerces</b><a href="#/commerces">Créer ma fiche</a><a href="#/tarifs">Tarifs et options</a></section></div><small>© 2026 Koté · Lomé, Togo <span>Le quartier vous répond.</span></small></footer> }
-function App() { const [path, setPath] = useState(location.hash || '#/'); useEffect(() => { const update = () => setPath(location.hash || '#/'); addEventListener('hashchange', update); return () => removeEventListener('hashchange', update) }, []); const page = path === '#/' ? <Home/> : path === '#/tarifs' ? <PricingPage/> : pageContent[path] ? <DetailPage data={pageContent[path]}/> : <NotFound/>; return <><Header path={path}/><main>{page}</main><Footer/></> }
+function App() {
+  const [path, setPath] = useState(location.hash || '#/')
+  const [theme, setTheme] = useState<'day' | 'night'>(() => localStorage.getItem('kote-theme') === 'night' ? 'night' : 'day')
+  useEffect(() => { const update = () => setPath(location.hash || '#/'); addEventListener('hashchange', update); return () => removeEventListener('hashchange', update) }, [])
+  useEffect(() => { localStorage.setItem('kote-theme', theme) }, [theme])
+  const page = path === '#/' ? <Home/> : path === '#/tarifs' ? <PricingPage/> : pageContent[path] ? <DetailPage data={pageContent[path]}/> : <NotFound/>
+  return <div className="site-shell" data-theme={theme}><Header path={path}/><button className="theme-switch" onClick={() => setTheme(theme === 'day' ? 'night' : 'day')} aria-label={theme === 'day' ? 'Activer le thème nuit' : 'Activer le thème jour'}>{theme === 'day' ? <Moon size={16}/> : <Sun size={16}/>}<span>{theme === 'day' ? 'Nuit' : 'Jour'}</span></button><main>{page}</main><Footer/></div>
+}
 createRoot(document.getElementById('app')!).render(<App />)
