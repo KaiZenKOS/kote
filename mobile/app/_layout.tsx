@@ -127,7 +127,7 @@ function Onboarding({ onTerminer }: { onTerminer: () => void }) {
     onTerminer();
   };
   const contenu = [
-    { Icone: MapPin, titre: "Les bonnes adresses\nse rapprochent.", texte: "Cherchez un besoin, repérez un commerce du quartier et évitez les détours inutiles." },
+    { Icone: MapPin, titre: "Les bonnes adresses\nse rapprochent.", texte: "Partout au Togo, cherchez un besoin, repérez un commerce du quartier et évitez les détours inutiles." },
     { Icone: MessageCircle, titre: "Un vrai commerce.\nUn échange direct.", texte: "Quand vous êtes prêt, Koté ouvre une conversation WhatsApp sans afficher les numéros publiquement." },
   ];
   if (etape < 2) {
