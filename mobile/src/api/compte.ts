@@ -65,3 +65,4 @@ export async function majPreferencesProfil(champs: Pick<PreferencesProfil, "noti
   if (error) throw new ErreurApi(error.message, 400);
 }
 export async function supprimerMonCompte(): Promise<void> { await appelerFonction("supprimer-compte", {}); await seDeconnecter(); }
+export async function desactiverMonCompte(): Promise<void> { await appelerFonction("desactiver-compte", {}); await seDeconnecter(); }
