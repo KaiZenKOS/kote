@@ -35,6 +35,7 @@ export default function NouvelleFiche() {
   const [nom, setNom] = useState("");
   const [telephone, setTelephone] = useState("");
   const [repere, setRepere] = useState("");
+  const [repereArrivee, setRepereArrivee] = useState("");
   const [point, setPoint] = useState<Position | null>(null);
   const [envoye, setEnvoye] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
@@ -57,7 +58,7 @@ export default function NouvelleFiche() {
 
   const telephoneValide = normaliserTelephone(telephone) !== null;
   const etape2Complete =
-    nom.trim().length >= 2 && telephoneValide && repere.trim().length >= 3;
+    nom.trim().length >= 2 && telephoneValide && repere.trim().length >= 3 && repereArrivee.trim().length >= 3;
 
   const enregistrer = () => {
     const numero = normaliserTelephone(telephone);
@@ -69,6 +70,7 @@ export default function NouvelleFiche() {
       categorieSlug: categorie,
       telephoneWhatsapp: numero,
       repere: repere.trim(),
+      repereArriveePublic: repereArrivee.trim(),
       position: point ?? positionParDefaut,
       // Le point n'est « ajuste » que si le marchand l'a reellement deplace.
       // Cette distinction sert au controle qualite : dans un marche dense, une
@@ -162,6 +164,15 @@ export default function NouvelleFiche() {
               valeur={repere}
               onChange={setRepere}
               placeholder="En face de la pharmacie du carrefour"
+              multiligne
+              maxLength={200}
+            />
+            <GrandChamp
+              libelle="Point d'arrivée visible"
+              aide="Choisissez un endroit public où le client peut s'arrêter : devant une pharmacie, un carrefour, une entrée de marché."
+              valeur={repereArrivee}
+              onChange={setRepereArrivee}
+              placeholder="Devant la pharmacie du carrefour"
               multiligne
               maxLength={200}
             />

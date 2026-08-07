@@ -47,6 +47,9 @@ export interface FicheMarchand {
   categorie_slug: string;
   description: string | null;
   repere: string;
+  /** Point d'arrivee visible et controle ; pas une promesse de securite. */
+  repere_arrivee_public?: string | null;
+  conseil_acces?: string | null;
   latitude: number;
   longitude: number;
   localisation_ajustee: boolean;

@@ -6,7 +6,7 @@
  * transmettre.
  */
 
-import { appelerFonction } from "./client";
+import { appelerFonction, erreurDepuisPostgrest, supabase } from "./client";
 import { empreinteAppareil } from "./../appareil";
 import type { MotifSignalement, Position, ReponseContact } from "./types";
 
@@ -46,4 +46,28 @@ export async function signaler(
     appareil_hash: await empreinteAppareil(),
     commentaire: commentaire?.trim() || undefined,
   });
+}
+
+export type MotifRisqueAcces =
+  | "repere_inexact"
+  | "acces_isole"
+  | "comportement_inquietant"
+  | "lieu_inaccessible"
+  | "autre";
+
+/**
+ * Alerte specifique au trajet. Une connexion est exigee pour eviter les
+ * campagnes anonymes contre un commerce ; le serveur dedoublonne par compte.
+ */
+export async function signalerRisqueAcces(
+  marchandId: string,
+  motif: MotifRisqueAcces,
+  commentaire?: string,
+): Promise<void> {
+  const { error } = await supabase.rpc("signaler_risque_acces", {
+    p_marchand_id: marchandId,
+    p_motif: motif,
+    p_commentaire: commentaire?.trim() || null,
+  });
+  if (error) throw erreurDepuisPostgrest(error);
 }

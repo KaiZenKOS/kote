@@ -20,6 +20,7 @@ export interface FichePrivee {
   description: string | null;
   telephone_whatsapp: string;
   repere: string;
+  repere_arrivee_public: string | null;
   localisation_ajustee: boolean;
   statut: StatutMarchand | "brouillon" | "en_veille" | "suspendue" | "retiree";
   derniere_confirmation: string;
@@ -57,6 +58,7 @@ export interface SaisieFiche {
   description?: string | null;
   telephoneWhatsapp: string;
   repere: string;
+  repereArriveePublic: string;
   position: Position;
   positionAjustee: boolean;
   /** Genere par le client. Rejouer la meme saisie ne cree pas de doublon. */
@@ -70,7 +72,7 @@ export async function mesFiches(): Promise<FichePrivee[]> {
   const { data, error } = await supabase
     .from("marchand")
     .select(
-      "id,proprietaire_id,cree_par_ambassadeur,nom_enseigne,categorie_slug,description,telephone_whatsapp,repere,localisation_ajustee,statut,derniere_confirmation,cle_idempotence,cree_le",
+      "id,proprietaire_id,cree_par_ambassadeur,nom_enseigne,categorie_slug,description,telephone_whatsapp,repere,repere_arrivee_public,localisation_ajustee,statut,derniere_confirmation,cle_idempotence,cree_le",
     )
     .order("cree_le", { ascending: false });
 
@@ -136,6 +138,7 @@ export async function creerFiche(saisie: SaisieFiche): Promise<FichePrivee> {
       description: saisie.description ?? null,
       telephone_whatsapp: saisie.telephoneWhatsapp,
       repere: saisie.repere,
+      repere_arrivee_public: saisie.repereArriveePublic,
       localisation: `SRID=4326;POINT(${saisie.position.longitude} ${saisie.position.latitude})`,
       localisation_ajustee: saisie.positionAjustee,
       cle_idempotence: saisie.cleIdempotence,
@@ -176,6 +179,7 @@ export async function majFiche(
     description: string | null;
     telephoneWhatsapp: string;
     repere: string;
+    repereArriveePublic: string;
     position: Position;
     positionAjustee: boolean;
   }>,
@@ -188,6 +192,8 @@ export async function majFiche(
   if (champs.telephoneWhatsapp !== undefined)
     charge.telephone_whatsapp = champs.telephoneWhatsapp;
   if (champs.repere !== undefined) charge.repere = champs.repere;
+  if (champs.repereArriveePublic !== undefined)
+    charge.repere_arrivee_public = champs.repereArriveePublic;
   if (champs.position !== undefined) {
     charge.localisation = `SRID=4326;POINT(${champs.position.longitude} ${champs.position.latitude})`;
   }

@@ -1,7 +1,7 @@
 import { Linking, Platform } from "react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { demanderContact, signaler } from "../api/actions";
+import { demanderContact, signaler, signalerRisqueAcces } from "../api/actions";
 import { journaliser } from "../journal/file";
 import { cles } from "../query/cles";
 import { CLES_MUTATION } from "../query/mutations";
@@ -57,6 +57,23 @@ export function useSignalement() {
       // signalements convergent : on invalide pour ne pas afficher une fiche
       // qu'on vient soi-meme de declarer fermee.
       void client.invalidateQueries({ queryKey: cles.fiche(args.marchandId) });
+    },
+  });
+}
+
+/** Alerte de securite : jamais mise en file hors ligne, pour ne pas agir tard. */
+export function useAlerteAcces() {
+  const client = useQueryClient();
+  return useMutation({
+    networkMode: "online",
+    mutationFn: (args: {
+      marchandId: string;
+      motif: Parameters<typeof signalerRisqueAcces>[1];
+      commentaire?: string;
+    }) => signalerRisqueAcces(args.marchandId, args.motif, args.commentaire),
+    onSuccess: (_data, args) => {
+      void client.invalidateQueries({ queryKey: cles.fiche(args.marchandId) });
+      void client.invalidateQueries({ queryKey: ["recherche"] });
     },
   });
 }

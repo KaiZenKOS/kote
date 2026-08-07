@@ -92,6 +92,10 @@ export default function DispositionRacine() {
             name="signalement/[id]"
             options={{ presentation: "transparentModal", animation: "fade" }}
           />
+          <Stack.Screen
+            name="securite/[id]"
+            options={{ presentation: "transparentModal", animation: "fade" }}
+          />
         </Stack>
         {!ouvertureTerminee && (
           <Animated.View

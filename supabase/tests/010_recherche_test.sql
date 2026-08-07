@@ -17,24 +17,24 @@ select plan(11);
 -- A : sur place. B : environ 500 m. C : environ 5 km.
 insert into public.marchand (
   id, nom_enseigne, categorie_slug, description, telephone_whatsapp,
-  repere, localisation, statut, derniere_confirmation
+  repere, localisation, statut, verifiee_terrain, derniere_confirmation
 ) values
   ('aaaaaaaa-0000-0000-0000-00000000000a', 'Atelier Test A', 'couture',
    'Couture femme et retouches', '+22890000201',
    'En face du test', st_setsrid(st_makepoint(1.2360, 6.1780), 4326)::geography,
-   'active', now()),
+   'active', true, now()),
   ('aaaaaaaa-0000-0000-0000-00000000000b', 'Garage Test B', 'mecanique',
    'Reparation moto', '+22890000202',
    'Apres le carrefour test', st_setsrid(st_makepoint(1.2360, 6.1825), 4326)::geography,
-   'active', now()),
+   'active', true, now()),
   ('aaaaaaaa-0000-0000-0000-00000000000c', 'Atelier Test C', 'couture',
    'Confection homme', '+22890000203',
    'Loin du test', st_setsrid(st_makepoint(1.2360, 6.2230), 4326)::geography,
-   'active', now()),
+   'active', true, now()),
   ('aaaaaaaa-0000-0000-0000-00000000000d', 'Atelier Test D', 'couture',
    'Fiche en veille', '+22890000204',
    'A cote du test', st_setsrid(st_makepoint(1.2361, 6.1781), 4326)::geography,
-   'en_veille', now() - interval '200 days');
+   'en_veille', false, now() - interval '200 days');
 
 -- 1. Le rayon filtre effectivement.
 select is(

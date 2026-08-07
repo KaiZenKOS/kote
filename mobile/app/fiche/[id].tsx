@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -178,6 +179,15 @@ export default function Fiche() {
             </View>
           ) : null}
 
+          <View style={styles.securite}>
+            <ShieldCheck size={18} color={couleurs.accentDoux} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.securiteTitre}>Arrivée conseillée</Text>
+              <Text style={styles.securiteTexte}>{donnees.repere_arrivee_public || donnees.repere}</Text>
+              <Text style={styles.securiteNote}>{donnees.conseil_acces || "Restez sur les voies fréquentées et vérifiez l'environnement avant de continuer."}</Text>
+            </View>
+          </View>
+
           <View style={styles.repere}>
             <View style={styles.repereBalise}>
               <MapPin size={20} color={couleurs.accentDoux} />
@@ -250,19 +260,26 @@ export default function Fiche() {
           <BoutonSecondaire
             libelle="Itinéraire"
             Icone={Navigation}
-            onPress={() =>
-              void ouvrirItineraire(
-                donnees.id,
-                donnees.latitude,
-                donnees.longitude,
-                etatPosition.statut === "prete" ? etatPosition.position : null,
-              )
-            }
+            onPress={() => Alert.alert(
+              "Avant de partir",
+              "Koté indique un commerce contrôlé, mais ne peut pas garantir la sécurité d'un trajet. Préférez un point visible, partagez votre destination avec un proche et n'entrez pas dans un lieu qui vous semble risqué.",
+              [
+                { text: "Annuler", style: "cancel" },
+                { text: "Continuer", onPress: () => void ouvrirItineraire(donnees.id, donnees.latitude, donnees.longitude, etatPosition.statut === "prete" ? etatPosition.position : null) },
+              ],
+            )}
           />
 
           <LienDiscret
             libelle="Signaler un problème"
             onPress={() => router.push(`/signalement/${donnees.id}`)}
+          />
+          <LienDiscret
+            libelle="Signaler un risque sur l'accès"
+            onPress={() => {
+              if (!session.connecte) { router.push("/profil"); return; }
+              router.push(`/securite/${donnees.id}`);
+            }}
           />
         </View>
       </ScrollView>
@@ -317,6 +334,10 @@ const styles = StyleSheet.create({
   },
   verification: { flexDirection: "row", alignItems: "center", gap: 6, marginTop: -8 },
   verificationTexte: { color: couleurs.fraicheurBonne, fontSize: typo.libelle, fontFamily: police.demi },
+  securite: { flexDirection: "row", gap: espaces.sm, padding: espaces.sm, borderWidth: 1, borderColor: couleurs.bordure, borderRadius: rayons.tuile, backgroundColor: couleurs.surface1 },
+  securiteTitre: { color: couleurs.textePrincipal, fontSize: typo.repere, fontFamily: police.demi },
+  securiteTexte: { marginTop: 2, color: couleurs.textePrincipal, fontSize: typo.repere, fontFamily: police.normal, lineHeight: 19 },
+  securiteNote: { marginTop: 5, color: couleurs.texteSecondaire, fontSize: typo.libelle, fontFamily: police.normal, lineHeight: 16 },
 
   repere: {
     flexDirection: "row",
