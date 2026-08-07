@@ -1,7 +1,7 @@
 import { Linking, Platform } from "react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { demanderContact, signaler, signalerRisqueAcces } from "../api/actions";
+import { demanderContact, signaler, signalerImage, signalerRisqueAcces } from "../api/actions";
 import { journaliser } from "../journal/file";
 import { cles } from "../query/cles";
 import { CLES_MUTATION } from "../query/mutations";
@@ -76,6 +76,10 @@ export function useAlerteAcces() {
       void client.invalidateQueries({ queryKey: ["recherche"] });
     },
   });
+}
+
+export function useSignalementImage() {
+  return useMutation({ networkMode: "online", mutationFn: (args: { marchandId: string; chemin: string; motif: Parameters<typeof signalerImage>[2] }) => signalerImage(args.marchandId, args.chemin, args.motif) });
 }
 
 /** Itineraire : journalise puis delegue a l'application de cartes du telephone. */

@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ArrowLeft, CircleCheck, Eye, Send, Trash2, ShieldCheck } from "lucide-react-native";
+import { ArrowLeft, CircleCheck, Eye, Send, Trash2, ShieldCheck, PackagePlus } from "lucide-react-native";
 import { Camera, ImagePlus } from "lucide-react-native";
 import * as ImagePicker from "expo-image-picker";
 
@@ -208,6 +208,13 @@ export default function TableauFiche() {
             </Pressable>
           ))}
         </View>
+
+        <GrandBouton
+          libelle="Mettre en avant mes produits"
+          Icone={PackagePlus}
+          variante="secondaire"
+          onPress={() => router.push(`/espace/produits/${fiche.id}`)}
+        />
 
         <View style={styles.section}>
           <Text style={styles.sectionTitre}>Photos de votre activité</Text>

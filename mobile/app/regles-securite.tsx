@@ -1,0 +1,16 @@
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ArrowLeft, CircleAlert, MapPin, ShieldAlert, UsersRound } from "lucide-react-native";
+import { Ecran } from "../src/composants/Ecran";
+import { BoutonRond } from "../src/composants/communs";
+import { couleurs, espaces, police, rayons, typo } from "../src/theme/tokens";
+
+const REGLES=[
+  {Icone:MapPin,titre:"Restez sur un point visible",texte:"Arrêtez-vous au repère public indiqué. Ne suivez jamais un inconnu dans une cour, une ruelle ou un lieu qui vous met mal à l'aise."},
+  {Icone:UsersRound,titre:"Prévenez une personne de confiance",texte:"Avant de partir, partagez votre destination et votre heure prévue d'arrivée. Si quelque chose change, partez sans vous justifier."},
+  {Icone:ShieldAlert,titre:"Face au harcèlement ou à l'agression",texte:"Mettez-vous d'abord en sécurité, cherchez de l'aide autour de vous puis prévenez immédiatement les autorités locales et une personne de confiance. Conservez les éléments utiles seulement si cela ne vous expose pas."},
+  {Icone:CircleAlert,titre:"Signalez après coup",texte:"Depuis la fiche, signalez un accès isolé, un repère erroné, un comportement inquiétant ou une image non conforme. Koté examine ces signalements ; ils ne remplacent pas les secours."},
+];
+export default function ReglesSecurite(){const router=useRouter(),insets=useSafeAreaInsets();return <Ecran><ScrollView contentContainerStyle={[styles.contenu,{paddingTop:insets.top+espaces.xs,paddingBottom:insets.bottom+espaces.xl}]}><BoutonRond Icone={ArrowLeft} etiquette="Retour" onPress={()=>router.back()}/><Text style={styles.titre}>Votre sécurité passe avant tout.</Text><Text style={styles.intro}>Koté aide à trouver un commerce. L'application ne peut pas évaluer une situation en temps réel ni garantir la sécurité d'un trajet.</Text>{REGLES.map(({Icone,titre,texte})=><View key={titre} style={styles.regle}><View style={styles.icone}><Icone size={21} color={couleurs.accentDoux}/></View><View style={{flex:1}}><Text style={styles.regleTitre}>{titre}</Text><Text style={styles.regleTexte}>{texte}</Text></View></View>)}<Text style={styles.pied}>En cas de danger immédiat, n'utilisez pas l'application : éloignez-vous et contactez les secours locaux.</Text></ScrollView></Ecran>}
+const styles=StyleSheet.create({contenu:{paddingHorizontal:espaces.md,gap:espaces.md},titre:{marginTop:espaces.sm,color:couleurs.textePrincipal,fontFamily:police.gras,fontSize:30,lineHeight:36},intro:{color:couleurs.texteSecondaire,fontFamily:police.normal,fontSize:typo.corps,lineHeight:24},regle:{flexDirection:"row",gap:espaces.sm,padding:espaces.md,borderRadius:rayons.tuile,backgroundColor:couleurs.surface1},icone:{width:40,height:40,borderRadius:20,alignItems:"center",justifyContent:"center",backgroundColor:couleurs.surface2},regleTitre:{color:couleurs.textePrincipal,fontFamily:police.demi,fontSize:typo.repere},regleTexte:{marginTop:5,color:couleurs.texteSecondaire,fontFamily:police.normal,fontSize:typo.libelle,lineHeight:18},pied:{color:couleurs.fraicheurAVerifier,fontFamily:police.demi,fontSize:typo.repere,lineHeight:20,textAlign:"center",paddingHorizontal:espaces.sm}});

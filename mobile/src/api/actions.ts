@@ -71,3 +71,9 @@ export async function signalerRisqueAcces(
   });
   if (error) throw erreurDepuisPostgrest(error);
 }
+
+export type MotifImage = "nudite" | "violence" | "harcelement" | "arnaque" | "hors_sujet" | "autre";
+export async function signalerImage(marchandId: string, cheminPhoto: string, motif: MotifImage): Promise<void> {
+  const { error } = await supabase.rpc("signaler_image", { p_marchand_id: marchandId, p_chemin_photo: cheminPhoto, p_motif: motif, p_commentaire: null });
+  if (error) throw erreurDepuisPostgrest(error);
+}

@@ -45,6 +45,7 @@ import { useFiche, useVueFiche } from "../../src/hooks/useFiche";
 import { useLibellesCategories } from "../../src/hooks/useLibelles";
 import { usePosition } from "../../src/hooks/usePosition";
 import { useSession } from "../../src/hooks/useSession";
+import { useProduitsPublics } from "../../src/hooks/useProduits";
 import { estEnLigne } from "../../src/query/reseau";
 import { couleurs, espaces, police, rayons, typo } from "../../src/theme/tokens";
 
@@ -60,6 +61,7 @@ export default function Fiche() {
   const favoris = useFavoris();
   const ouvrirItineraire = useItineraire();
   const session = useSession();
+  const produits = useProduitsPublics(id ?? null);
 
   useVueFiche(id ?? null);
 
@@ -214,6 +216,21 @@ export default function Fiche() {
             <Text style={styles.description}>{donnees.description}</Text>
           ) : null}
 
+          {(produits.data ?? []).length > 0 ? (
+            <View style={styles.produits}>
+              <Text style={styles.repereLibelle}>À DÉCOUVRIR CHEZ CE COMMERÇANT</Text>
+              {(produits.data ?? []).map((produit) => (
+                <View key={produit.id} style={styles.produit}>
+                  <View style={{ flex: 1 }}>
+                    <View style={styles.produitTitre}><Text style={styles.produitNom}>{produit.nom}</Text>{produit.est_nouveaute ? <Text style={styles.nouveau}>NOUVEAU</Text> : null}</View>
+                    {produit.description ? <Text style={styles.produitDescription}>{produit.description}</Text> : null}
+                  </View>
+                  {produit.prix_fcfa !== null ? <Text style={styles.prix}>{produit.prix_fcfa.toLocaleString("fr-FR")} FCFA</Text> : null}
+                </View>
+              ))}
+            </View>
+          ) : null}
+
           {lignesHoraires.length > 0 ? (
             <View style={styles.horaires}>
               <View style={styles.horairesTitre}>
@@ -281,6 +298,14 @@ export default function Fiche() {
               router.push(`/securite/${donnees.id}`);
             }}
           />
+          {donnees.photo_principale ? <LienDiscret
+            libelle="Signaler l'image de cette fiche"
+            onPress={() => {
+              if (!session.connecte) { router.push("/profil"); return; }
+              router.push({ pathname: "/contenu/[id]", params: { id: donnees.id, chemin: donnees.photo_principale } });
+            }}
+          /> : null}
+          <LienDiscret libelle="Conseils de sécurité" onPress={() => router.push("/regles-securite")} />
         </View>
       </ScrollView>
 
@@ -376,6 +401,13 @@ const styles = StyleSheet.create({
     fontFamily: police.normal,
     lineHeight: typo.corps * 1.45,
   },
+  produits: { gap: espaces.sm },
+  produit: { flexDirection: "row", gap: espaces.sm, padding: espaces.sm, borderRadius: rayons.tuile, backgroundColor: couleurs.surface1 },
+  produitTitre: { flexDirection: "row", alignItems: "center", flexWrap: "wrap", gap: 6 },
+  produitNom: { color: couleurs.textePrincipal, fontSize: typo.repere, fontFamily: police.demi },
+  nouveau: { color: couleurs.accentDoux, fontSize: 9, fontFamily: police.gras, letterSpacing: 0.7 },
+  produitDescription: { marginTop: 3, color: couleurs.texteSecondaire, fontSize: typo.libelle, fontFamily: police.normal, lineHeight: 16 },
+  prix: { color: couleurs.textePrincipal, fontSize: typo.libelle, fontFamily: police.demi, alignSelf: "center" },
 
   horaires: { gap: 10 },
   horairesTitre: { flexDirection: "row", alignItems: "center", gap: espaces.xs },
