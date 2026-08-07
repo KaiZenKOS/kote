@@ -85,7 +85,7 @@ export default function Aide() {
 
         <Section titre="Trouver sans adresse">
           {
-            "À Lomé, on se repère au point de repère, pas à l'adresse. Chaque fiche en " +
+            "Au Togo, les repères locaux comptent autant que les adresses. Chaque fiche en " +
             "porte un, écrit par le commerçant lui-même. C'est l'information la plus utile " +
             "de l'application : lisez-la avant de partir."
           }
@@ -119,8 +119,8 @@ export default function Aide() {
           <Text style={styles.sectionTitre}>Carte hors ligne</Text>
           <Text style={styles.sectionTexte}>
             {carte.installe
-              ? `Le fond de carte du Grand Lomé est enregistré sur votre téléphone (${formaterOctets(carte.poids)}). La carte fonctionne sans connexion et ne consomme plus de données.`
-              : "Vous pouvez enregistrer le fond de carte du Grand Lomé une fois pour toutes. La carte fonctionnera ensuite sans connexion, et ne consommera plus jamais de données."}
+              ? `Le fond de carte du Grand Lomé est enregistré sur votre téléphone (${formaterOctets(carte.poids)}). La carte fonctionne sans connexion et ne consomme plus de données. D'autres zones du Togo seront ajoutées progressivement.`
+              : "Vous pouvez enregistrer le fond de carte du Grand Lomé une fois pour toutes. La carte fonctionnera ensuite sans connexion et ne consommera plus jamais de données. D'autres zones du Togo seront ajoutées progressivement."}
           </Text>
           {carte.progression !== null ? (
             <Text style={styles.note}>

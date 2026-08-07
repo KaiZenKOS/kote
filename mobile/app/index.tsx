@@ -143,7 +143,7 @@ export default function Accueil() {
             <Text style={styles.localisationTexte} numberOfLines={1}>
               {positionConnue
                 ? "Autour de vous"
-                : "Position approximative · Lomé"}
+                : "Position approximative"}
             </Text>
           </View>
           <Pressable onPress={etatPosition.rafraichir} hitSlop={12}>
