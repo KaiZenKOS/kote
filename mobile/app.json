@@ -5,7 +5,7 @@
     "scheme": "kote",
     "version": "0.1.0",
     "orientation": "portrait",
-    "icon": "./assets/icon-kote-2026.png",
+    "icon": "./assets/kote-segmented-mark.png",
     "userInterfaceStyle": "dark",
     "backgroundColor": "#14100E",
     "ios": {
@@ -15,7 +15,7 @@
       "package": "app.kote.togo",
       "adaptiveIcon": {
         "backgroundColor": "#14100E",
-        "foregroundImage": "./assets/android-icon-foreground-kote-2026.png",
+        "foregroundImage": "./assets/android-icon-foreground-kote-segmented.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
@@ -45,7 +45,7 @@
     "web": {
       "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/kote-segmented-mark.png"
     }
   }
 }
