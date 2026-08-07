@@ -45,6 +45,12 @@ export default function Signalement() {
   const [commentaireOuvert, setCommentaireOuvert] = useState(false);
   const [commentaire, setCommentaire] = useState("");
   const [envoye, setEnvoye] = useState(false);
+  // La feuille peut être ouverte depuis un état sans historique (notamment
+  // pendant l’onboarding). Dans ce cas `back()` affiche une erreur Android.
+  const fermer = () => {
+    if (router.canGoBack()) router.back();
+    else router.replace("/");
+  };
 
   /**
    * Un seul appui suffit pour les trois cas courants : le motif declenche
@@ -55,12 +61,12 @@ export default function Signalement() {
     if (!id) return;
     signalement.mutate({ marchandId: id, motif, commentaire });
     setEnvoye(true);
-    setTimeout(() => router.back(), 1200);
+    setTimeout(fermer, 1200);
   };
 
   return (
     <View style={styles.voile}>
-      <Pressable style={styles.zoneFermeture} onPress={() => router.back()} />
+      <Pressable style={styles.zoneFermeture} onPress={fermer} />
 
       <View style={[styles.feuille, { paddingBottom: insets.bottom + 28 }]}>
         <View style={styles.poignee} />
@@ -75,7 +81,7 @@ export default function Signalement() {
             accessibilityRole="button"
             accessibilityLabel="Fermer"
             style={styles.fermer}
-            onPress={() => router.back()}
+            onPress={fermer}
           >
             <X size={20} color={couleurs.texteSecondaire} />
           </Pressable>
