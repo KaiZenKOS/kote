@@ -1,4 +1,4 @@
-import { supabase, erreurDepuisPostgrest } from "./client";
+import { appelerFonction, supabase, erreurDepuisPostgrest } from "./client";
 
 export interface SignalementModeration {
   signalement_id: string;
@@ -23,4 +23,9 @@ export async function traiterSignalement(
     p_signalement_id: signalementId, p_decision: decision, p_note: null,
   });
   if (error) throw erreurDepuisPostgrest(error);
+}
+
+export type LigneCatalogue = { nom: string; categorie: string; telephone: string; repere: string; latitude: number; longitude: number; description?: string };
+export async function importerCatalogue(lignes: LigneCatalogue[]): Promise<{ importees: number; erreurs: Array<{ ligne: number; erreur: string }> }> {
+  return appelerFonction("importer-catalogue", { lignes });
 }

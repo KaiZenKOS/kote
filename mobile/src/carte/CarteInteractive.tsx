@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Pressable, StyleSheet, View, type ViewStyle } from "react-native";
+import { Pressable, StyleSheet, Text, View, type ViewStyle } from "react-native";
 import {
   Camera,
   Map as CarteLibre,
@@ -12,6 +12,7 @@ import { iconeCategorie } from "../composants/icones";
 import { couleurs, rayons } from "../theme/tokens";
 import { STYLE_SOMBRE } from "./horsLigne";
 import type { Position } from "../api/types";
+import { regrouperMarqueurs } from "./clusters";
 
 /**
  * Carte interactive.
@@ -67,6 +68,7 @@ export function CarteInteractive({
   style,
 }: ProprietesCarte) {
   const camera = useRef<CameraRef>(null);
+  const groupes = regrouperMarqueurs(marqueurs, zoom);
 
   // La carte est creee une fois avec le centre de secours de Lome. Des que le
   // GPS repond, on rejoint naturellement la vraie position au lieu de laisser
@@ -125,7 +127,9 @@ export function CarteInteractive({
         </Marker>
       ) : null}
 
-      {marqueurs.map((m) => {
+      {groupes.map((groupe) => {
+        if (groupe.type === "cluster") return <Marker key={groupe.id} lngLat={[groupe.longitude, groupe.latitude]}><Pressable accessibilityRole="button" accessibilityLabel={`${groupe.total} commerces proches`} onPress={() => onSelectionner?.(groupe.membres[0].id)} style={styles.cluster}><View><MarkerTotal total={groupe.total}/></View></Pressable></Marker>;
+        const m = groupe.marqueur;
         const Icone = iconeCategorie(m.icone);
         const actif = m.id === selection;
         return (
@@ -148,6 +152,8 @@ export function CarteInteractive({
     </CarteLibre>
   );
 }
+
+function MarkerTotal({ total }: { total: number }) { return <Text style={styles.clusterTexte}>{total}</Text>; }
 
 /** Epingle simple, sans icone : placement manuel d'une boutique. */
 export function EpinglePlacement() {
@@ -172,6 +178,8 @@ const styles = StyleSheet.create({
     height: 58,
     borderRadius: 29,
   },
+  cluster: { width: 52, height: 52, borderRadius: 26, backgroundColor: couleurs.accent, borderWidth: 4, borderColor: couleurs.surface1, alignItems: "center", justifyContent: "center" },
+  clusterTexte: { color: couleurs.surAccent, fontSize: 15, fontWeight: "800" },
   placement: {
     width: 26,
     height: 26,

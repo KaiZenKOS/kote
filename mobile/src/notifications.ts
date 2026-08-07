@@ -1,6 +1,8 @@
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
+import Constants from "expo-constants";
+import { appelerFonction } from "./api/client";
 
 /** Notifications locales, sans jeton ni donnée personnelle tant que la
  * production n'est pas connectée. Les push distants utiliseront ensuite le
@@ -15,6 +17,15 @@ export async function activerNotifications(): Promise<boolean> {
   const existante = await Notifications.getPermissionsAsync();
   const permission = existante.granted ? existante : await Notifications.requestPermissionsAsync();
   return permission.granted;
+}
+
+export async function enregistrerNotificationsDistantes(): Promise<boolean> {
+  if (!(await activerNotifications())) return false;
+  const projectId = Constants.expoConfig?.extra?.eas?.projectId ?? Constants.easConfig?.projectId;
+  if (!projectId) return false;
+  const token = (await Notifications.getExpoPushTokenAsync({ projectId })).data;
+  await appelerFonction("enregistrer-notification", { jeton: token, plateforme: Platform.OS });
+  return true;
 }
 
 export async function programmerRappelFiche(nom: string, dansJours = 75): Promise<string | null> {

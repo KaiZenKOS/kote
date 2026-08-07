@@ -10,7 +10,7 @@
  * WhatsApp. L'API ci-dessous est identique dans les deux cas.
  */
 
-import { supabase } from "./client";
+import { appelerFonction, supabase } from "./client";
 import { ErreurApi } from "./erreurs";
 
 /**
@@ -54,3 +54,14 @@ export async function verifierCode(
 export async function seDeconnecter(): Promise<void> {
   await supabase.auth.signOut();
 }
+
+export interface PreferencesProfil { notifications_activees: boolean; consentement_le: string | null; est_admin: boolean; }
+export async function lirePreferencesProfil(): Promise<PreferencesProfil | null> {
+  const { data, error } = await supabase.from("profil").select("notifications_activees, consentement_le, est_admin").maybeSingle();
+  if (error) throw new ErreurApi(error.message, 400); return data;
+}
+export async function majPreferencesProfil(champs: Pick<PreferencesProfil, "notifications_activees">): Promise<void> {
+  const { error } = await supabase.from("profil").update({ ...champs, consentement_le: new Date().toISOString() }).eq("id", (await supabase.auth.getUser()).data.user?.id ?? "");
+  if (error) throw new ErreurApi(error.message, 400);
+}
+export async function supprimerMonCompte(): Promise<void> { await appelerFonction("supprimer-compte", {}); await seDeconnecter(); }
