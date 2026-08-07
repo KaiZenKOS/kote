@@ -1,7 +1,7 @@
 -- Régression des parcours de lancement : modération, import et suppression.
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(8);
+select plan(10);
 
 select ok(to_regprocedure('public.file_moderation(integer)') is not null, 'La file de modération existe');
 select ok(to_regprocedure('public.traiter_signalement(uuid,text,text)') is not null, 'La décision de modération existe');
@@ -13,6 +13,17 @@ select ok(not has_table_privilege('anon','public.notification_appareil','SELECT'
 
 select ok(to_regclass('public.marchand') is not null, 'La cible de l’import catalogue existe');
 select ok(not has_table_privilege('anon','public.marchand','INSERT'), 'Un visiteur ne peut pas contourner l’import administrateur');
+
+select is(
+  (select confdeltype::text from pg_constraint where conrelid = 'public.notification_appareil'::regclass and contype = 'f' limit 1),
+  'c',
+  'La suppression du profil efface les jetons de notification associes'
+);
+select is(
+  (select confdeltype::text from pg_constraint where conrelid = 'public.marchand'::regclass and conname like '%proprietaire_id%'),
+  'n',
+  'La suppression du profil conserve la fiche sans proprietaire'
+);
 
 select * from finish();
 rollback;
