@@ -21,6 +21,7 @@ import { CLES_MUTATION } from "../query/mutations";
 import { useSession } from "./useSession";
 import { ajouterPhoto, mesPhotos, supprimerPhoto } from "../api/photos";
 import type { PhotoMarchand } from "../api/types";
+import { programmerRappelFiche } from "../notifications";
 
 export function useMesPhotos(marchandId: string | null) {
   const { connecte } = useSession();
@@ -95,8 +96,11 @@ export function useCreerFiche() {
   return useMutation({
     mutationKey: CLES_MUTATION.creationFiche,
     mutationFn: (saisie: SaisieFiche) => creerFiche(saisie),
-    onSuccess: () => {
+    onSuccess: (fiche) => {
       void client.invalidateQueries({ queryKey: ["espace"] });
+      // Le rappel reste local tant que le compte n’a pas explicitement activé
+      // les notifications. En cas de refus, il n’empêche jamais la création.
+      void programmerRappelFiche(fiche.nom_enseigne).catch(() => undefined);
     },
   });
 }
